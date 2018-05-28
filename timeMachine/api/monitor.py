@@ -23,10 +23,10 @@ def monitor(delta, interval, Session):
 			# session.close()
 		except:
 			session.rollback()
-			print('Bummer')
+			log.debug('Oh deBugger', exc_info=True)
 		finally:
 			session.close()
-			print('Monitored')        
+			log.warn('Monitor')        
 
 		# set the sleep interval ...
 		time.sleep(interval[delta])
@@ -48,8 +48,6 @@ class Monitor:
 				coin = altcoins[i]
 				cross = self._crossover(df)
 				coin.setPrice(df['Close'].iloc[-1])
-				#if len(cross) == 0:
-				#	raise Exception(f'No crossovers for coin {coin.name()}')
 				if len(cross) > 0 and coin.nextSignal(cross.index.max()):
 					log.warn(f'Cross signal detected for {coin.name()}')
 					transaction = cross['Transaction'].iloc[-1]

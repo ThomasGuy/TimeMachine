@@ -46,7 +46,7 @@ def tickToc(coins, delta, Session):
         finally:
             session.close()
             resp.close_session()
-            print('TickToc')
+            log.warn('TickToc')
 
 
 def insertRow(row, coin, session):

@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 log = logging.getLogger(__name__)
 
 # initialize globals
-delta = '5m'
+delta = '15m'
 db_name = f'sqlite:///c:\\data\\sqlite\\db\\tickToc{delta}.db'
 endpoint = 'https://api.bitfinex.com/v2/candles/trade:'
 coins = ['BTCUSD', 'ETHUSD', 'EOSUSD', 'IOTUSD', 'LTCUSD', 'NEOUSD', 'OMGUSD',

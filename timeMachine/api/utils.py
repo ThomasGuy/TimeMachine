@@ -21,7 +21,9 @@ log = logging.getLogger(__name__)
 
 # get request response from exchange api
 class Return_API_response:
-    """Get data from BitFinex API"""
+    """Get data from BitFinex API. Bitfinex rate limit policy can vary in a
+     range of 10 to 90 requests per minute. So if we get a 429 response wait
+     for a minute"""
     def __init__(self):
         self.sesh = requests.Session()
 
@@ -29,16 +31,15 @@ class Return_API_response:
         try:
             res = self.sesh.get(url)
             while res.status_code == 429:
-                print(f'{res.status_code} {url[42:]}')
-                time.sleep(5)
+                log.error(f'{res.status_code} {url[42:]}')
+                # wait for Bitfinex
+                time.sleep(62)
                 res = self.sesh.get(url)
 
             data = res.json()
             res.raise_for_status()
-        except requests.exceptions.HTTPError as err:
+        except requests.exceptions.HTTPError:
             log.error("Requsts error ", exc_info=True)
-            print(f'Not logger {err}')
-            sys.exit(1)
             # Do something here to fix error
             return False
         return data
@@ -52,7 +53,6 @@ class Email:
     def __init__(self, coin, msg):
         self.coin = coin
         self.msg = msg
-        print(f'{self.coin} sends signal {self.msg}')
 
     def _findUser(self, coin):
         """Find all users who hold this coin"""
@@ -71,7 +71,8 @@ class Email:
                       (email, sendmailStatus), exc_info=True)
 
         smtpObj.quit()
-        log.warn('Email sent to {email}')
+        log.warn(f'{self.coin} sends signal {self.msg}. Email sent to {email}')
+        
                                                        
 
 

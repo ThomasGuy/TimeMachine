@@ -19,7 +19,6 @@ class Coin:
     def setPrice(self, price):
         """Set with latest price """
         self.currentPrice = price
-        print(f'{self.altcoin} = ${self.currentPrice}')
 
     def price(self):
         """Return latest price"""
