@@ -31,7 +31,7 @@ class Return_API_response:
         try:
             res = self.sesh.get(url)
             while res.status_code == 429:
-                log.error(f'{res.status_code} {url[42:]}')
+                log.info(f'{res.status_code} {url[42:]}')
                 # wait for Bitfinex
                 time.sleep(62)
                 res = self.sesh.get(url)
@@ -71,7 +71,7 @@ class Email:
                       (email, sendmailStatus), exc_info=True)
 
         smtpObj.quit()
-        log.warn(f'{self.coin} sends signal {self.msg}. Email sent to {email}')
+        log.info(f'{self.coin} sends signal {self.msg}. Email sent to {email}')
         
                                                        
 

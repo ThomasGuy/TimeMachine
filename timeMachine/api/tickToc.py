@@ -7,16 +7,16 @@ from datetime import datetime
 import requests
 
 # From TimeMachine
-from .utils import Return_API_response, Queue
+from .utils import Return_API_response
 from .database.db_init import DB_Tables
 
 log = logging.getLogger(__name__)
 
 endpoint = 'https://api.bitfinex.com/v2/candles/trade:'
-response_Q = Queue()
 sleep = {
 	'5m' : 280,
-	'15m': 880
+	'15m': 880,
+    '30m': 1770,
 }
 
 
@@ -46,7 +46,7 @@ def tickToc(coins, delta, Session):
         finally:
             session.close()
             resp.close_session()
-            log.warn('TickToc')
+            log.info('TickToc complete')
 
 
 def insertRow(row, coin, session):

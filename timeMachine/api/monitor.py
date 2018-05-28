@@ -1,3 +1,9 @@
+"""
+Two Data structures used to translate the Database and keep the State of the 
+altcoins. The two dictionaries DB_Tables and altcoins use the same keys, as 
+well as pandas DF_Tables which is generated from DB after every iteration.
+"""
+
 import sys, time
 from datetime  import datetime
 # third party imports
@@ -15,7 +21,8 @@ log = logging.getLogger(__name__)
 def monitor(delta, interval, Session):
 	"""Running in it's own thread monitor continually updates the Altcoins and
 	checks for any signals from the Moving Averages"""
-	altcoins = _init_Coins()
+	altcoins = _init_Coins(Session)
+	
 	while True:
 		session = Session()
 		try:
@@ -23,19 +30,19 @@ def monitor(delta, interval, Session):
 			# session.close()
 		except:
 			session.rollback()
-			log.debug('Oh deBugger', exc_info=True)
+			log.error('Oh deBugger', exc_info=True)
 		finally:
 			session.close()
-			log.warn('Monitor')        
+			log.info('Monitor complete')        
 
 		# set the sleep interval ...
 		time.sleep(interval[delta])
 
 
 class Monitor:
-	"""This class is instantiated every interval. Monitoring each coin 
+	"""This class is instantiated every interval. Monitoring each altcoin's
 	DataFrame, upon a moving average signal sending out user emails. Updating 
-	each coin instance with timestamp, trend and latest price"""
+	each 'altcoin' instance with timestamp, trend and latest price"""
 	def __init__(self, session):
 		self.session = session
 
@@ -48,11 +55,11 @@ class Monitor:
 				coin = altcoins[i]
 				cross = self._crossover(df)
 				coin.setPrice(df['Close'].iloc[-1])
-				if len(cross) > 0 and coin.nextSignal(cross.index.max()):
-					log.warn(f'Cross signal detected for {coin.name()}')
-					transaction = cross['Transaction'].iloc[-1]
+				transaction = cross['Transaction'].iloc[-1]
+				if coin.trend() != transaction and coin.nextSignal(cross.index.max()):
 					coin.setTrend(transaction)
-					Email(coin.name(), transaction).sendEmail('TWGuy66@gmail.com')
+					Email(coin.name(), transaction).sendEmail()
+
 		except Exception:
 			log.error(f"Error with coin {coin.name()}", exc_info=True)
 			
@@ -88,6 +95,11 @@ class Monitor:
 		record = []
 		# use 2nd db record as 1st has equal MA values
 		Higher = dataset.iloc[1]['sewma'] > dataset.iloc[1]['bewma']
+		if Higher:
+			record.append([dataset.index.min(), 0.0, 'Buy'])
+		else:
+			record.append([dataset.index.min(), 0.0, 'Sell'])
+		
 		for date, row in dataset.iterrows():
 			if Higher:
 				# Sell condition
@@ -104,7 +116,7 @@ class Monitor:
 		cross.set_index('Date', drop=True, inplace=True)
 		return cross
 
-def _init_Coins():
+def _init_Coins(Session):
 	# Initialize coins
 	altcoins = {
 		'avt': Coin('Aventus'),
@@ -116,7 +128,7 @@ def _init_Coins():
 		'eth': Coin('Ethereum'),
 		'eos': Coin('Eosio'),
 		'fun': Coin('FunFair'),
-		'gnt': Coin('Golem'),
+		'gnt': Coin('Golem (GNT)'),
 		'iot': Coin('Iota'),
 		'ltc': Coin('Litecoin'),
 		'neo': Coin('Neon'),
@@ -128,9 +140,27 @@ def _init_Coins():
 		'san': Coin('Santiment'),
 		'spk': Coin('SpankChain'),
 		'trx': Coin('Tron'),
-		'xlm': Coin('Stella Lumen'),
-		'xmr': Coin('Monero'),
+		'xlm': Coin('Stella Lumen (XLM)'),
+		'xmr': Coin('Monero (XMR)'),
 		'xrp': Coin('Ripple'),
 		'zec': Coin('Zcash')
 		}
+	
+	# Set intial 'trend' Buy or Sell for each coin
+	session = Session()
+	initialize = Monitor(session)
+	try:
+		DF_Tables = initialize._get_DF_Tables()
+		# for each DB table generate dataframe check for signal then update coin
+		for i, df in DF_Tables.items():
+			coin = altcoins[i]
+			cross = initialize._crossover(df)
+			coin.setTrend(cross['Transaction'].iloc[-1])
+	except IndexError:
+		session.rollback()
+		log.error(f'Init Altcoins error for {coin.name()}', exc_info=True)
+
+	finally:
+		session.close()
+
 	return altcoins

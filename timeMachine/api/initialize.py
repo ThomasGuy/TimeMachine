@@ -5,14 +5,14 @@ from sqlalchemy.orm import sessionmaker
 log = logging.getLogger(__name__)
 
 # initialize globals
-delta = '15m'
+delta = '30m'
 db_name = f'sqlite:///c:\\data\\sqlite\\db\\tickToc{delta}.db'
 endpoint = 'https://api.bitfinex.com/v2/candles/trade:'
 coins = ['BTCUSD', 'ETHUSD', 'EOSUSD', 'IOTUSD', 'LTCUSD', 'NEOUSD', 'OMGUSD',
-		'TRXUSD', 'XRPUSD', 'ZECUSD', 'AVTUSD', 'BCHUSD', 'BTGUSD', 'DSHUSD',
-		'ETCUSD', 'FUNUSD', 'GNTUSD', 'QSHUSD', 'QTMUSD', 'RCNUSD', 'RLCUSD',
-		'SANUSD', 'SPKUSD', 'XLMUSD', 'XMRUSD']
-interval = {'5m': 300, '15m': 900}
+		'TRXUSD', 'XRPUSD', 'ZECUSD', 'BCHUSD', 'BTGUSD', 'DSHUSD',
+		'ETCUSD', 'GNTUSD', 'QTMUSD', 'SANUSD', 'XLMUSD', 'XMRUSD', 
+		'RLCUSD', 'FUNUSD', 'QSHUSD', 'AVTUSD', 'SPKUSD', 'RCNUSD']
+interval = {'5m': 300, '15m': 900, '30m': 1800}
 
 
 # From TimeMachine

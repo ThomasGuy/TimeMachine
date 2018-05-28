@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 class Chunk_update:
     """chunk_update will bring the DB up to date relative to the last
     DB entry"""
-    def chunk(self, session, delta, endpoint, interval):
+    def chunk(self, session,  delta, endpoint, interval):
         resp = Return_API_response()
         for key, table in DB_Tables.items():
             # find time of last entry
@@ -24,9 +24,13 @@ class Chunk_update:
                 limit = 1000
             else:
                 # How many 'intervals' since last entry
-                limit = int((datetime.now() - query[0][0]).total_seconds() // interval[delta])
-            sym = key.upper() + 'USD'
+                if delta == '30m':
+                    limit = int((datetime.utcnow() - query[0][0]).total_seconds() // interval[delta])
+                else:
+                    limit = int((datetime.now() - query[0][0]).total_seconds() // interval[delta])
+            
             if limit > 0:
+                sym = key.upper() + 'USD'
                 data = resp.api_response(endpoint + f'{delta}:t{sym}/hist?limit={limit}')[::-1]
                 inventory = []
                 for row in data:
