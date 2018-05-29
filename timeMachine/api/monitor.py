@@ -92,8 +92,9 @@ class Monitor:
 	def _crossover(self, dataset):
 		"""Record all crossing points of the moving averages"""
 		record = []
-		# use 2nd db record as 1st has equal MA values
+		# use 5th db record as 1st has equal MA values
 		Higher = dataset.iloc[5]['sewma'] > dataset.iloc[5]['bewma']
+		# adding a record ensures record is never empty
 		if Higher:
 			record.append([dataset.index.min(), dataset['Close'].iloc[0], 'Buy'])
 		else:
@@ -158,7 +159,7 @@ def _init_Coins(Session):
 	except IndexError:
 		session.rollback()
 		log.error(f'Init Altcoins error for {coin.name()}', exc_info=True)
-
+		sys.exit()
 	finally:
 		session.close()
 

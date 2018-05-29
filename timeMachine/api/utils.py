@@ -13,7 +13,6 @@ import smtplib
 import requests
 from requests import Session
 import pandas as pd
-import matplotlib.pyplot as plt
 
 # Init Logging Facilities
 log = logging.getLogger(__name__)
@@ -92,34 +91,3 @@ class Queue:
 
 	def size(self):
 		return len(self.items)
-
-
-def plotDataset(dataset, record, title):
-	fig = plt.figure(figsize=(16, 8))
-	axes = fig.add_axes([0, 0, 1, 1])
-	# plot dataset
-	axes.plot(dataset.index, dataset['sewma'],
-			  label='ewma={}'.format(10), color='blue')
-	axes.plot(dataset.index, dataset['bewma'],
-			  label='ewma={}'.format(27), color='red')
-	axes.plot(dataset.index, dataset['Close'],
-			  label='close', color='green', alpha=.5)
-	axes.plot(dataset.index, dataset['longewma'],
-			  label='longma', color='orange', alpha=.5)
-	axes.plot(dataset.index, dataset['High'],
-			  label='high', color='pink', alpha=.5)
-
-	# plot the crossover points
-	sold = pd.DataFrame(record[record['Transaction'] == 'Sell']['Close'])
-	axes.scatter(sold.index, sold['Close'], color='r', label='Sell', lw=3)
-	bought = pd.DataFrame(record[record['Transaction'] == 'Buy']['Close'])
-	axes.scatter(bought.index, bought['Close'], color='g', label='Sell', lw=3)
-
-	axes.set_ylabel('closing price')
-	axes.set_xlabel('Date')
-	axes.grid(color='b', alpha=0.5, linestyle='--', linewidth=0.5)
-	axes.grid(True)
-	axes.set_title(title)
-	# axes.set_xticks()
-	plt.legend()
-	plt.show()

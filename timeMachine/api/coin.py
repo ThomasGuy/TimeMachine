@@ -22,7 +22,7 @@ class Coin:
 		"""Is the latest MA signal more recent than the last ?"""
 		if tstamp > self.previousSignal:
 			self.previousSignal = tstamp
-			log.info(f'Set Signal time : {self.previousSignal}')
+			log.info(f'Signal time {self.altcoin} at {self.previousSignal}')
 			return True
 		return False
 
@@ -37,7 +37,7 @@ class Coin:
 	def setTrend(self, trend):
 		"""set current trend i.e Sell or Buy"""
 		self.currentTrend = trend
-		log.info(f'{self.altcoin} is on {self.currentTrend} trend')
+		log.info(f"{self.altcoin} is on '{self.currentTrend}' trend")
 
 	def trend(self):
 		"""Return current trend"""
@@ -47,4 +47,3 @@ class Coin:
 		"""Return coin name"""
 		return self.altcoin
 	
-

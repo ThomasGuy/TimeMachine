@@ -40,7 +40,7 @@ def start():
 		log.info('Chunks updated')
 
 	# Start tickToc
-	watcher = threading.Thread(target=tickToc, args=[coins, delta, Session])
+	watcher = threading.Thread(target=tickToc, args=[coins, delta, Session, interval])
 	watcher.start()
 	log.info(f"TickToc started {watcher.getName()}")
 
