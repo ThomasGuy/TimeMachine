@@ -41,7 +41,7 @@ class Coin:
 
 	def trend(self):
 		"""Return current trend"""
-		return self.trend
+		return self.currentTrend
 
 	def name(self):
 		"""Return coin name"""

@@ -27,7 +27,6 @@ def monitor(delta, interval, Session):
 		session = Session()
 		try:
 			Monitor(session).check(altcoins)
-			# session.close()
 		except:
 			session.rollback()
 			log.error('Oh deBugger', exc_info=True)
@@ -56,13 +55,13 @@ class Monitor:
 				cross = self._crossover(df)
 				coin.setPrice(df['Close'].iloc[-1])
 				transaction = cross['Transaction'].iloc[-1]
-				if coin.trend() != transaction and coin.nextSignal(cross.index.max()):
+				if not coin.trend() == transaction and coin.nextSignal(cross.index.max()):
+					log.info(f'Monitor.check {coin.name()} {coin.trend()} != {transaction}')
 					coin.setTrend(transaction)
 					Email(coin.name(), transaction).sendEmail()
 
 		except Exception:
 			log.error(f"Error with coin {coin.name()}", exc_info=True)
-			
 			
 
 	def _get_DF_Tables(self, resample='6H', sma=10, bma=27, lma=74):
@@ -91,14 +90,14 @@ class Monitor:
 
 
 	def _crossover(self, dataset):
-		"""Record ant crossing points of the moving averages"""
+		"""Record all crossing points of the moving averages"""
 		record = []
 		# use 2nd db record as 1st has equal MA values
-		Higher = dataset.iloc[1]['sewma'] > dataset.iloc[1]['bewma']
+		Higher = dataset.iloc[5]['sewma'] > dataset.iloc[5]['bewma']
 		if Higher:
-			record.append([dataset.index.min(), 0.0, 'Buy'])
+			record.append([dataset.index.min(), dataset['Close'].iloc[0], 'Buy'])
 		else:
-			record.append([dataset.index.min(), 0.0, 'Sell'])
+			record.append([dataset.index.min(), dataset['Close'].iloc[0], 'Sell'])
 		
 		for date, row in dataset.iterrows():
 			if Higher:
@@ -119,31 +118,31 @@ class Monitor:
 def _init_Coins(Session):
 	# Initialize coins
 	altcoins = {
-		'avt': Coin('Aventus'),
-		'bch': Coin('Bitcoin Cash'),
-		'btc': Coin('Bitcoin'),
-		'btg': Coin('Bitcoin Gold'),
-		'dsh': Coin('Dash'),
-		'etc': Coin('Ethereum Classic'),
-		'eth': Coin('Ethereum'),
-		'eos': Coin('Eosio'),
-		'fun': Coin('FunFair'),
+		'avt': Coin('Aventus (AVT)'),
+		'bch': Coin('Bitcoin Cash (BTH)'),
+		'btc': Coin('Bitcoin (BTC)'),
+		'btg': Coin('Bitcoin Gold (BTG)'),
+		'dsh': Coin('Dash (DSH)'),
+		'etc': Coin('Ethereum Classic (ETC)'),
+		'eth': Coin('Ethereum (ETH)'),
+		'eos': Coin('Eosio (EOS)'),
+		'fun': Coin('FunFair (FUN)'),
 		'gnt': Coin('Golem (GNT)'),
-		'iot': Coin('Iota'),
-		'ltc': Coin('Litecoin'),
-		'neo': Coin('Neon'),
+		'iot': Coin('Iota (IOT)'),
+		'ltc': Coin('Litecoin (LTC)'),
+		'neo': Coin('Neon (NEO)'),
 		'omg': Coin('Omisego'),
-		'qsh': Coin('QASH'),
-		'qtm': Coin('Qtum'),
+		'qsh': Coin('QASH (QSH)'),
+		'qtm': Coin('Qtum (QTM)'),
 		'rcn': Coin('Ripio Credit Network (RCN)'),
 		'rlc': Coin('iExec (RLC)'),
-		'san': Coin('Santiment'),
-		'spk': Coin('SpankChain'),
-		'trx': Coin('Tron'),
+		'san': Coin('Santiment (SAN)'),
+		'spk': Coin('SpankChain (SPK)'),
+		'trx': Coin('Tron (TRX)'),
 		'xlm': Coin('Stella Lumen (XLM)'),
 		'xmr': Coin('Monero (XMR)'),
-		'xrp': Coin('Ripple'),
-		'zec': Coin('Zcash')
+		'xrp': Coin('Ripple (XRP)'),
+		'zec': Coin('Zcash (ZEC)')
 		}
 	
 	# Set intial 'trend' Buy or Sell for each coin

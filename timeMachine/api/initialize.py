@@ -37,12 +37,15 @@ def start():
 		log.error("Chunky Error", exc_info=True)
 	finally:
 		session.close()
+		log.info('Chunks updated')
 
 	# Start tickToc
 	watcher = threading.Thread(target=tickToc, args=[coins, delta, Session])
 	watcher.start()
+	log.info(f"TickToc started {watcher.getName()}")
 
 	# wait then start Monitor
 	time.sleep(30)
 	looking = threading.Thread(target=monitor, args=[delta, interval, Session])
 	looking.start()
+	log.info(f"Monitor started {looking.getName()}")
