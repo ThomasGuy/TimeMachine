@@ -11,7 +11,7 @@ import pandas as pd
 import logging
 
 # from Time Machine
-from .database.db_init import DB_Tables
+from .database.db_init import DB_Tables, CryptoCompare_DB_Tables
 from .utils import Email
 from .coin import Coin
 
@@ -21,12 +21,17 @@ log = logging.getLogger(__name__)
 def monitor(delta, interval, Session):
 	"""Running in it's own thread monitor continually updates the Altcoins and
 	checks for any signals from the Moving Averages"""
-	altcoins = _init_Coins(Session)
+	all_DB_Tables = {}
+	for table in [DB_Tables, CryptoCompare_DB_Tables]:
+		for i, v in table.items():
+			all_DB_Tables[i] = v
+	
+	altcoins = _init_Coins(Session, all_DB_Tables)
 	
 	while True:
 		session = Session()
 		try:
-			Monitor(session).check(altcoins)
+			Monitor(session, all_DB_Tables).check(altcoins)
 		except:
 			session.rollback()
 			log.error('Oh deBugger', exc_info=True)
@@ -42,8 +47,9 @@ class Monitor:
 	"""This class is instantiated every interval. Monitoring each altcoin's
 	DataFrame, upon a moving average signal sending out user emails. Updating 
 	each 'altcoin' instance with timestamp, trend and latest price"""
-	def __init__(self, session):
+	def __init__(self, session, dbTables):
 		self.session = session
+		self.dbTables = dbTables
 
 
 	def check(self, altcoins):
@@ -56,9 +62,8 @@ class Monitor:
 				coin.setPrice(df['Close'].iloc[-1])
 				transaction = cross['Transaction'].iloc[-1]
 				if not coin.trend() == transaction and coin.nextSignal(cross.index.max()):
-					log.info(f'Monitor.check {coin.name()} {coin.trend()} != {transaction}')
 					coin.setTrend(transaction)
-					Email(coin.name(), transaction).sendEmail()
+					Email.sendEmail(coin.name(), transaction)
 
 		except Exception:
 			log.error(f"Error with coin {coin.name()}", exc_info=True)
@@ -68,24 +73,33 @@ class Monitor:
 		"""Generate a DataFrame for each DB_Table, reasmple back from the present
 		time i.e. the right of the sample frequency interval. Add in the moving averages
 		"""
-		DF_Tables = {}
-		for i, table in DB_Tables.items():
-			data = self.session.query(table.MTS, table.Open, table.Close,
-								table.High, table.Low).all()
-			df = pd.DataFrame([[item for item in tpl] for tpl in data],
-							columns=('MTS', 'Open', 'Close', 'High', 'Low'))
-			latest_timestamp = df['MTS'].max()
-			base = latest_timestamp.hour + latest_timestamp.minute/60.0
-			df.set_index('MTS', drop=True, inplace=True)
-			df.drop_duplicates()
-			df = df.groupby('MTS')['Open', 'Close', 'High', 'Low'].mean()
-			df = df.resample(rule=resample, closed='right', label='right', base=base).agg(
-				{'Open': 'first', 'Close': 'last', 'High': 'max', 'Low': 'min'})
-			df['sewma'] = df['Close'].ewm(span=sma).mean()
-			df['bewma'] = df['Close'].ewm(span=bma).mean()
-			df['longewma'] = df['Close'].ewm(span=lma).mean()
-			DF_Tables[i] = df
+		# Combine the 2 DB_Tables to get all the tables. Note I use the same
+		#  index for DB, DF and altcoins
 		
+		DF_Tables = {}
+		try:
+			for i, table in self.dbTables.items():
+				data = self.session.query(table.MTS, table.Open, table.Close,
+									table.High, table.Low).all()
+				df = pd.DataFrame([[item for item in tpl] for tpl in data],
+								columns=('MTS', 'Open', 'Close', 'High', 'Low'))
+				df.set_index('MTS', drop=True, inplace=True)
+				latest_timestamp = df.index.max()
+				# log.info(f'{i} {table}/n{df.head()}/nLatest_timestamp = {latest_timestamp}')
+				base = latest_timestamp.hour + latest_timestamp.minute/60.0
+				df.drop_duplicates()
+				df = df.groupby('MTS')['Open', 'Close', 'High', 'Low'].mean()
+				df = df.resample(rule=resample, closed='right', label='right', base=base).agg(
+					{'Open': 'first', 'Close': 'last', 'High': 'max', 'Low': 'min'})
+				df['sewma'] = df['Close'].ewm(span=sma).mean()
+				df['bewma'] = df['Close'].ewm(span=bma).mean()
+				df['longewma'] = df['Close'].ewm(span=lma).mean()
+				DF_Tables[i] = df
+		except AttributeError:
+			log.error(f'{i} in {table} ', exc_info=True)
+		except:
+			raise
+			 
 		return DF_Tables
 
 
@@ -116,7 +130,7 @@ class Monitor:
 		cross.set_index('Date', drop=True, inplace=True)
 		return cross
 
-def _init_Coins(Session):
+def _init_Coins(Session, all_DB_Tables):
 	# Initialize coins
 	altcoins = {
 		'avt': Coin('Aventus (AVT)'),
@@ -143,15 +157,31 @@ def _init_Coins(Session):
 		'xlm': Coin('Stella Lumen (XLM)'),
 		'xmr': Coin('Monero (XMR)'),
 		'xrp': Coin('Ripple (XRP)'),
-		'zec': Coin('Zcash (ZEC)')
+		'zec': Coin('Zcash (ZEC)'),
+		'ada': Coin('Cardano (ADA)'),
+		'xvg': Coin('Verge (XVG)'),
+		'xem': Coin('NEM (XEM)'),
+		'ven': Coin('VeChain (VEN)'),
+		'bnb': Coin('Binance Coin (BNB)'),
+		'bcn': Coin('Bytecoin (BCN)'),
+		'icx': Coin('ICON (ICX)'),
+		'lsk': Coin('Lisk (LSK)'),
+		'zil': Coin('Zilliqa (ZIL)'),
+		'ont': Coin('Ontology (ONT)'),
+		'ae': Coin('Aeternity (AE)'),
+		'zrx': Coin('Ox (ZRX)'),
+		'dcr': Coin('Decred (DCR)'),
+		'nano': Coin('Nano (NANO)'),
+		'waves': Coin('Waves (WAVES)')
 		}
-	
+
+
 	# Set intial 'trend' Buy or Sell for each coin
 	session = Session()
-	initialize = Monitor(session)
+	initialize = Monitor(session, all_DB_Tables)
 	try:
-		DF_Tables = initialize._get_DF_Tables()
 		# for each DB table generate dataframe check for signal then update coin
+		DF_Tables = initialize._get_DF_Tables()
 		for i, df in DF_Tables.items():
 			coin = altcoins[i]
 			cross = initialize._crossover(df)

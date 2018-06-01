@@ -145,14 +145,89 @@ class Xmr(MyMixin, Base):
 		return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
 			self.MTS, self.Open, self.Close)
 
+class Ada(MyMixin, Base):
+	def __repr__(self):
+		return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
+			self.MTS, self.Open, self.Close)
+
+class Xvg(MyMixin, Base):
+	def __repr__(self):
+		return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
+			self.MTS, self.Open, self.Close)
+
+class Xem(MyMixin, Base):
+	def __repr__(self):
+		return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
+			self.MTS, self.Open, self.Close)
+
+class Ven(MyMixin, Base):
+	def __repr__(self):
+		return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
+			self.MTS, self.Open, self.Close)
+
+class Bnb(MyMixin, Base):
+	def __repr__(self):
+		return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
+			self.MTS, self.Open, self.Close)
+
+class Bcn(MyMixin, Base):
+	def __repr__(self):
+		return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
+			self.MTS, self.Open, self.Close)
+
+class Icx(MyMixin, Base):
+	def __repr__(self):
+		return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
+			self.MTS, self.Open, self.Close)
+
+class Lsk(MyMixin, Base):
+	def __repr__(self):
+		return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
+			self.MTS, self.Open, self.Close)
+
+class Zil(MyMixin, Base):
+	def __repr__(self):
+		return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
+			self.MTS, self.Open, self.Close)
+
+class Ont(MyMixin, Base):
+	def __repr__(self):
+		return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
+			self.MTS, self.Open, self.Close)
+
+class Ae(MyMixin, Base):
+	def __repr__(self):
+		return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
+			self.MTS, self.Open, self.Close)
+
+class Zrx(MyMixin, Base):
+	def __repr__(self):
+		return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
+			self.MTS, self.Open, self.Close)
+
+class Dcr(MyMixin, Base):
+	def __repr__(self):
+		return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
+			self.MTS, self.Open, self.Close)
+
+class Nano(MyMixin, Base):
+	def __repr__(self):
+		return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
+			self.MTS, self.Open, self.Close)
+
+class Waves(MyMixin, Base):
+	def __repr__(self):
+		return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
+			self.MTS, self.Open, self.Close)
+
 class Xrp(MyMixin, Base):
 	def __repr__(self):
-		return "<Xrp(MTS='%s', Open='%f', Close='%f')>" % (
+		return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
 			self.MTS, self.Open, self.Close)
 
 class Zec(MyMixin, Base):
 	def __repr__(self):
-		return "<Zec(MTS='%s', Open='%f', Close='%f')>" % (
+		return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
 			self.MTS, self.Open, self.Close)
 
 
@@ -172,8 +247,30 @@ class User(Base):
 
 Base.metadata.create_all(engine)
 
+
+CryptoCompare_DB_Tables = {
+    'avt': Avt,
+	'ada': Ada,
+	'xvg': Xvg,
+	'xem': Xem,
+	'ven': Ven,
+	'bnb': Bnb,
+	'bcn': Bcn,
+	'icx': Icx,
+	'lsk': Lsk,
+	'zil': Zil,
+	'ont': Ont,
+	'ae': Ae,
+	'zrx': Zrx,
+	'dcr': Dcr,
+	'nano': Nano,
+	'waves': Waves,
+	'spk': Spk,
+  	'rcn': Rcn,
+	'rlc': Rlc
+}
+
 DB_Tables = {
-	'avt': Avt,
 	'bch': Bch,
 	'btc': Btc,
 	'btg': Btg,
@@ -189,13 +286,12 @@ DB_Tables = {
 	'omg': Omg,
 	'qsh': Qsh,
 	'qtm': Qtm,
-	'rcn': Rcn,
-	'rlc': Rlc,
 	'san': San,
-	'spk': Spk,
 	'trx': Trx,
 	'xlm': Xlm,
 	'xmr': Xmr,
 	'xrp': Xrp,
 	'zec': Zec
 }
+
+

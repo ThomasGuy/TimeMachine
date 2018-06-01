@@ -30,7 +30,7 @@ class Return_API_response:
 		try:
 			res = self.sesh.get(url)
 			while res.status_code == 429:
-				log.info(f'{res.status_code} {url[42:]}')
+				log.info(f'{res.status_code} {res.url[38:]}')
 				# wait for Bitfinex
 				time.sleep(62)
 				res = self.sesh.get(url)
@@ -49,32 +49,33 @@ class Return_API_response:
 
 class Email:
 	"""Send Email to users"""
-	def __init__(self, coin, msg):
-		self.coin = coin
-		self.msg = msg
+	def __init__(self, coinName, transaction):
+		self.name = coinName
+		self.msg = transaction
 
 	def _findUser(self, coin):
 		"""Find all users who hold this coin"""
 		pass
 
-	def sendEmail(self, email='twguy66@gmail.com'):
+	@staticmethod
+	def sendEmail(name, msg, to_addr='twguy66@gmail.com'):
 		"""Send user email"""
-		body = f'Subject: Moving average Alert, \n {self.coin} says {self.msg}'
+		header = 'From: room4rent@buriramvillas.com\n'
+		header += f'To: {to_addr}\n'
+		header += 'Subject: MA-Alert\n'
+		message = header + f'Moving average:- {name} advises {msg} indicator...'
+		
 		smtpObj = smtplib.SMTP('smtp.stackmail.com', 587)
 		smtpObj.ehlo()
 		smtpObj.starttls()
-		smtpObj.login('mail@TWGuy.co.uk', 'Sporty66')
-		sendmailStatus = smtpObj.sendmail('mail@TWGuy.co.uk', email, body)
+		smtpObj.login('room4rent@buriramvillas.com', 'Sporty66')
+		sendmailStatus = smtpObj.sendmail('room4rent@buriramvillas.com', to_addr, message)
 		if sendmailStatus != {}:
 			log.error('There was a problem sending email to %s: %s' %
-					  (email, sendmailStatus), exc_info=True)
-
+					(to_addr, sendmailStatus), exc_info=True)
 		smtpObj.quit()
-		log.info(f'{self.coin} sends signal {self.msg}. Email sent to {email}')
 		
 													   
-
-
 class Queue:
 	"""Queue class"""
 	def __init__(self):

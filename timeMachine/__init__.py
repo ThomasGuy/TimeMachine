@@ -1,20 +1,22 @@
 import sys
-from os import path, remove
+import os
 import logging
 import logging.config
 
-current_path = path.dirname(path.abspath(__file__))
-sys.path.append(current_path)
+current_dir = os.path.dirname(os.path.realpath(__file__))
+package_dir = os.path.realpath(os.path.join(current_dir, os.pardir))
+sys.path.insert(0, package_dir)
+
 
 # If applicable, delete the existing log file to generate a fresh log
 #  file during each execution
-if path.isfile(current_path + "/temp/timeMachine.log"):
-	remove(current_path + "/temp/timeMachine.log")
+if os.path.isfile(package_dir + "/temp/timeMachine.log"):
+	os.remove(package_dir + "/temp/timeMachine.log")
 
 logging.basicConfig(level=logging.DEBUG,
 					format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
 					datefmt='%m-%d %H:%M',
-					filename=current_path + '/temp/timeMachine.log',
+					filename=package_dir + '/temp/timeMachine.log',
 					filemode='w')
 # define a Handler which writes INFO messages or higher to the sys.stderr
 console = logging.StreamHandler()
