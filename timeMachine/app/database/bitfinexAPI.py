@@ -50,7 +50,7 @@ class BitfinexAPI:
                     session.bulk_save_objects(inventory)
                     session.commit()
                 except Error_429 as err:
-                    log.info(f'Bitfinex 429 error {key} {err}')
+                    log.info(f'Bitfinex {key} 429 error {err.args}')
                 except Exception as err:
                     log.error(f'BitfinexAPI {key} {err.args}')
 
