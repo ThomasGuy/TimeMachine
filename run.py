@@ -1,4 +1,4 @@
-from timeMachine import start
+from timeMachine import main
 
 if __name__ == '__main__':
-	start()
+    main()
