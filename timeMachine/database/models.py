@@ -3,10 +3,40 @@ from datetime import datetime
 # Third party imports
 from sqlalchemy import Table, Column, DateTime, Float, String, Integer, create_engine
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
+from flask_sqlalchemy_session import current_session
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # TimaMachine imports
-from ..initialize import db_name
+from timeMachine.server import login
+
+
+# delta = '15m'
+# db_name = f'sqlite:///c:\\data\\sqlite\\db\\tickTocTest{delta}.db'
 Base = declarative_base()
+
+
+class User(UserMixin, Base):
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String(64), index=True, unique=True)
+    email = Column(String(120), index=True, unique=True)
+    password_hash = Column(String(128))
+
+    def __repr__(self):
+        return '<User {}>'.format(self.username)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+
+@login.user_loader
+def load_user(id):
+    return current_session.query(User).get(int(id))
 
 
 class MyMixin(object):
@@ -232,23 +262,15 @@ class Elf(MyMixin, Base):
         return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
             self.MTS, self.Open, self.Close)
 
-
-class User(Base):
-    __tablename__ = 'users'
-    user_id = Column(Integer(), primary_key=True)
-    username = Column(String(15), nullable=False, unique=True)
-    email_address = Column(String(255), nullable=False)
-    password = Column(String(25), nullable=False)
-    created_on = Column(DateTime(), default=datetime.now)
-    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
-
+class Steem(MyMixin, Base):
     def __repr__(self):
-        return "User(username='{self.username}', " \
-            "email_address='{self.email_address}', ".format(self=self)
+        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
+            self.MTS, self.Open, self.Close)
 
-
-engine = create_engine(db_name, echo=False)
-Base.metadata.create_all(engine)
+class Mana(MyMixin, Base):
+    def __repr__(self):
+        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
+            self.MTS, self.Open, self.Close)
 
 
 CryptoCompare_DB_Tables = {
@@ -268,10 +290,11 @@ CryptoCompare_DB_Tables = {
     'dcr': Dcr,
     'nano': Nano,
     'waves': Waves,
-    'spk': Spk,
+    'steem': Steem,
     'rcn': Rcn,
     'rlc': Rlc,
-    'elf': Elf
+    'elf': Elf,
+    'mana': Mana
 }
 
 DB_Tables = {
@@ -291,6 +314,7 @@ DB_Tables = {
     'qsh': Qsh,
     'qtm': Qtm,
     'san': San,
+    'spk': Spk,
     'trx': Trx,
     'xlm': Xlm,
     'xmr': Xmr,

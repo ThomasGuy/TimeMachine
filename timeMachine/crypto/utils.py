@@ -14,7 +14,7 @@ import requests
 import pandas as pd
 
 # package imports
-from .initialize import Session
+# from ..database.base import session_factory as Session
 
 
 # Init Logging Facilities
@@ -90,9 +90,9 @@ class DF_Tables:
     # Note I use the same index for DB, DF and altcoins
 
     @classmethod
-    def get_DFTables(self, dbTables, sma=10, bma=27, lma=74, resample='6H'):
+    def get_DFTables(self, session, dbTables, sma=10, bma=27, lma=74, resample='6H'):
         DF_Tables = {}
-        session = Session()
+        # session = Session()
         try:
             for i, table in dbTables.items():
                 data = session.query(table.MTS, table.Open, table.Close,

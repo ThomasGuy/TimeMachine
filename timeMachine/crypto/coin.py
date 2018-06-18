@@ -1,7 +1,6 @@
 import datetime
 import logging
 
-from .initialize import delta
 
 log = logging.getLogger(__name__)
 
@@ -12,11 +11,7 @@ class Coin:
 		self.altcoin = name
 		self.currentPrice = None
 		self.currentTrend = None
-		if delta == '30m':
-			self.previousSignal = datetime.datetime.utcnow()
-		else:
-			self.previousSignal = datetime.datetime.now()
-
+		self.previousSignal = datetime.datetime.utcnow()
 
 	def nextSignal(self, tstamp):
 		"""Is the latest MA signal more recent than the last ?"""

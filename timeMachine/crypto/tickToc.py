@@ -3,8 +3,8 @@ import time
 
 # From TimeMachine
 from .utils import Return_API_response
-from .database.bitfinexAPI import BitfinexAPI
-from .database.cryptoCompareAPI import CompareAPI
+from ..database.bitfinexAPI import BitfinexAPI
+from ..database.cryptoCompareAPI import CompareAPI
 
 log = logging.getLogger(__name__)
 

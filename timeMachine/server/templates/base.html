@@ -1,0 +1,30 @@
+<html>
+
+<head>
+    {% if title %}
+    <title>{{ title }} - BitTrendz</title>
+    {% else %}
+    <title>Welcome to BitTrendz</title>
+    {% endif %}
+</head>
+
+<body>
+    <div>BitTrendz :
+        <a href={{ url_for( "main.index") }}>Home</a>
+        <a href={{ url_for( "auth.login") }}>Login</a>
+        <a href={{ url_for( "auth.register") }}>Sign up</a>
+
+    </div>
+    <hr> {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
+    {% block content %} {% endblock %}
+</body>
+
+</html>

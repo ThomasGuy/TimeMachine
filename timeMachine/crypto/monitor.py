@@ -11,26 +11,26 @@ import pandas as pd
 import logging
 
 # from Time Machine
-from .database.db_init import all_DB_tables
+from ..database.models import all_DB_tables
 from .utils import Email, DF_Tables
 from .coin import Coin
 
 log = logging.getLogger(__name__)
 
 
-def monitor(delta, interval, altcoins):
+def monitor(delta, interval, altcoins, Session):
     """Running in it's own thread monitor continually updates the Altcoins and
     checks for any signals from the Moving Averages"""
     
     while True:
-        #session = Session()
+        session = Session()
         try:
-            Monitor.check(altcoins)
+            Monitor.check(altcoins, session)
         except:
-            #session.rollback()
+            session.rollback()
             log.error('Oh deBugger', exc_info=True)
         finally:
-            #session.close()
+            session.close()
             log.info('Monitor complete')        
 
         # set the sleep interval ...
@@ -45,8 +45,8 @@ class Monitor:
         #self.session = session
         
     @classmethod
-    def check(self, altcoins):
-        tables = DF_Tables.get_DFTables(all_DB_tables())
+    def check(self, altcoins, session):
+        tables = DF_Tables.get_DFTables(session, all_DB_tables())
         # for each DB table generate dataframe check for signal then update coin
         try:
             for i, df in tables.items():

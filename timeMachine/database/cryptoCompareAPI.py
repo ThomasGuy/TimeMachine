@@ -6,8 +6,8 @@ import pandas as pd
 from sqlalchemy import func
 
 # from TimeMachine
-from .db_init import CryptoCompare_DB_Tables
-from ..utils import Return_API_response
+from .models import CryptoCompare_DB_Tables
+from ..crypto.utils import Return_API_response
 
 
 log = logging.getLogger(__name__)
