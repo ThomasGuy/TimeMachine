@@ -50,10 +50,9 @@ def register():
         user.set_password(form.password.data)
         current_session.add(user)
         current_session.commit()
-        #flash(_('Congratulations, you are now a registered user!'))
+        flash('Congratulations, you are now a registered user!')
         return redirect(url_for('auth.login'))
-    return render_template('auth/register.html', title='Register',
-                           form=form)
+    return render_template('auth/register.html', title='Register', form=form)
 
 
 # @bp.route('/reset_password_request', methods=['GET', 'POST'])

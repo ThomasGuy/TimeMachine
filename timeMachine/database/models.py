@@ -1,9 +1,10 @@
 from datetime import datetime
 
 # Third party imports
-from sqlalchemy import Table, Column, DateTime, Float, String, Integer, create_engine
+from sqlalchemy import Column, DateTime, Float, String, Integer, ForeignKey
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
-from flask_sqlalchemy_session import current_session
+from flask_sqlalchemy_session import current_session as cs
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -11,18 +12,17 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from timeMachine.server import login
 
 
-# delta = '15m'
-# db_name = f'sqlite:///c:\\data\\sqlite\\db\\tickTocTest{delta}.db'
 Base = declarative_base()
 
 
 class User(UserMixin, Base):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer(), primary_key=True)
     username = Column(String(64), index=True, unique=True)
     email = Column(String(120), index=True, unique=True)
     password_hash = Column(String(128))
+    # profile = relationship('Profile', backref='author', lazy='dynamic')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -34,9 +34,23 @@ class User(UserMixin, Base):
         return check_password_hash(self.password_hash, password)
 
 
+class Profile(Base):
+    __tablename__= 'profiles'
+
+    profile_id = Column(Integer, primary_key=True)
+    body = Column(String(255))
+    user_id = Column(Integer(), ForeignKey('users.id'))
+
+    # user = relationship("User", backref=backref('profiles', order_by=profile_id))
+
+    def __repr__(self):
+        return '<Profile {}>'.format(self.body)
+
+
+
 @login.user_loader
 def load_user(id):
-    return current_session.query(User).get(int(id))
+    return cs.query(User).get(int(id))
 
 
 class MyMixin(object):
@@ -56,221 +70,139 @@ class MyMixin(object):
     Low = Column(Float(), nullable=False)
     Volume = Column(Float(), nullable=False)
 
+    def __repr__(self):
+        return "<%s (MTS='%s', Open='%f', Close='%f')>" % (
+            self.__tablename__, self.MTS, self.Open, self.Close)
+
 
 class Avt(MyMixin, Base):
-    def __repr__(self):
-        return "<Btc(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
-
+    pass
+    
 class Bch(MyMixin, Base):
-    def __repr__(self):
-        return "<Btc(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Btc(MyMixin, Base):
-    def __repr__(self):
-        return "<Btc(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Btg(MyMixin, Base):
-    def __repr__(self):
-        return "<Btc(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
             
 class Dsh(MyMixin, Base):
-    def __repr__(self):
-        return "<Btc(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
             
 class Eos(MyMixin, Base):
-    def __repr__(self):
-        return "<Eos(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
             
 class Etc(MyMixin, Base):
-    def __repr__(self):
-        return "<Eos(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Eth(MyMixin, Base):
-    def __repr__(self):
-        return "<Eth(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Fun(MyMixin, Base):
-    def __repr__(self):
-        return "<Eth(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Gnt(MyMixin, Base):
-    def __repr__(self):
-        return "<Eth(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Iot(MyMixin, Base):
-    def __repr__(self):
-        return "<Iot(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Ltc(MyMixin, Base):
-    def __repr__(self):
-        return "<Ltc(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Neo(MyMixin, Base):
-    def __repr__(self):
-        return "<Neo(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Qsh(MyMixin, Base):
-    def __repr__(self):
-        return "<Neo(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Qtm(MyMixin, Base):
-    def __repr__(self):
-        return "<Neo(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Omg(MyMixin, Base):
-    def __repr__(self):
-        return "<Omg(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Rcn(MyMixin, Base):
-    def __repr__(self):
-        return "<Omg(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Rlc(MyMixin, Base):
-    def __repr__(self):
-        return "<Omg(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class San(MyMixin, Base):
-    def __repr__(self):
-        return "<Omg(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Spk(MyMixin, Base):
-    def __repr__(self):
-        return "<Omg(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Trx(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Xlm(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Xmr(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Ada(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Xvg(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Xem(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Ven(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Bnb(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Bcn(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Icx(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Lsk(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Zil(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Ont(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Ae(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Zrx(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Dcr(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Nano(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Waves(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Xrp(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Zec(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Elf(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Steem(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 class Mana(MyMixin, Base):
-    def __repr__(self):
-        return "<Trx(MTS='%s', Open='%f', Close='%f')>" % (
-            self.MTS, self.Open, self.Close)
+    pass
 
 
 CryptoCompare_DB_Tables = {
@@ -322,10 +254,6 @@ DB_Tables = {
     'zec': Zec
 }
 
+
 def all_DB_tables():
-    all_tables = {}
-    for table in [CryptoCompare_DB_Tables, DB_Tables]:
-        all_tables.update(table)
-
-    return all_tables
-
+    return {**CryptoCompare_DB_Tables, **DB_Tables}

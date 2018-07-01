@@ -7,9 +7,10 @@ db_name = f'sqlite:///c:\\data\\sqlite\\db\\tickTocTesting{delta}.db'
 
 
 class Config(object):
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will/-never-guess'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
     DELTA = delta
     DATABASE_URI = os.environ.get('DATABASE_URL') or db_name
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or db_name
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     MAIL_SERVER = os.environ.get('MAIL_SERVER')

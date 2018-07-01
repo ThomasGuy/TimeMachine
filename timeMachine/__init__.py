@@ -33,7 +33,14 @@ console.setFormatter(formatter)
 
 from timeMachine.server import create_app, session_factory
 from timeMachine.crypto.initialize import main
+from timeMachine.database.models import User, all_DB_tables
 
 
 app = create_app()
-main(session_factory)
+session = session_factory()
+# main(session_factory)
+
+
+@app.shell_context_processor
+def make_shell_context():
+    return {'session': session, 'User': User, 'tables': all_DB_tables()}

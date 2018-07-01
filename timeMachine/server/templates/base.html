@@ -11,8 +11,12 @@
 <body>
     <div>BitTrendz :
         <a href={{ url_for( "main.index") }}>Home</a>
-        <a href={{ url_for( "auth.login") }}>Login</a>
-        <a href={{ url_for( "auth.register") }}>Sign up</a>
+        {% if current_user.is_anonymous %}
+            <a href={{ url_for( "auth.login") }}>Login</a>
+            <a href={{ url_for( "auth.register") }}>Sign up</a>
+        {% else %}
+            <a href={{ url_for( "auth.logout") }}>Logout</a>
+        {% endif %}
 
     </div>
     <hr> {% with messages = get_flashed_messages() %}

@@ -4,7 +4,7 @@ import logging
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
-from flask_babel import _, lazy_gettext as _l
+# from flask_babel import _, lazy_gettext as _l
 from flask_sqlalchemy_session import current_session
 
 # package imports
@@ -15,6 +15,7 @@ log = logging.getLogger(__name__)
 
 
 class LoginForm(FlaskForm):
+    """login"""
     username = StringField('Userneame', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
@@ -22,6 +23,7 @@ class LoginForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
+    """Registration"""
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
@@ -40,14 +42,14 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Please use a different email address.')
 
 
-class ResetPasswordRequestForm(FlaskForm):
-    email = StringField(_l('Email'), validators=[DataRequired(), Email()])
-    submit = SubmitField(_l('Request Password Reset'))
+# class ResetPasswordRequestForm(FlaskForm):
+#     email = StringField(_l('Email'), validators=[DataRequired(), Email()])
+#     submit = SubmitField(_l('Request Password Reset'))
 
 
-class ResetPasswordForm(FlaskForm):
-    password = PasswordField(_l('Password'), validators=[DataRequired()])
-    password2 = PasswordField(
-        _l('Repeat Password'), validators=[DataRequired(),
-                                           EqualTo('password')])
-    submit = SubmitField(_l('Request Password Reset'))
+# class ResetPasswordForm(FlaskForm):
+#     password = PasswordField(_l('Password'), validators=[DataRequired()])
+#     password2 = PasswordField(
+#         _l('Repeat Password'), validators=[DataRequired(),
+#                                            EqualTo('password')])
+#     submit = SubmitField(_l('Request Password Reset'))

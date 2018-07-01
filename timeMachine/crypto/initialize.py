@@ -9,7 +9,6 @@ interval = {'5m': 300, '15m': 900, '30m': 1800, '1h': 3600}
 altcoins = None
 
 # From TimeMachine, initialize the DB
-# from ..database.base import session_factory as Session
 from timeMachine.config import Config
 from ..database.models import all_DB_tables
 

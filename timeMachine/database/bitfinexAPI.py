@@ -1,5 +1,6 @@
 from datetime import datetime
 import logging
+import pytz
 
 # third party imports
 from sqlalchemy import func
@@ -27,7 +28,7 @@ class BitfinexAPI:
             else:
                 # How many 'intervals' since last entry
                 if delta in ('5m', '15m'):
-                    limit = int((datetime.now() - query[0][0]).total_seconds() // interval[delta])
+                    limit = int((datetime.utcnow() - query[0][0]).total_seconds() // interval[delta])
                 else:
                     limit = int((datetime.utcnow() - query[0][0]).total_seconds() // interval[delta])
             if limit > 1000:
