@@ -7,6 +7,7 @@ db_name = f'sqlite:///c:\\data\\sqlite\\db\\tickTocTesting{delta}.db'
 
 
 class Config(object):
+    """Configuration constants"""
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
     DELTA = delta
     DATABASE_URI = os.environ.get('DATABASE_URL') or db_name

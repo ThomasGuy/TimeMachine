@@ -49,10 +49,12 @@ class Monitor:
         tables = DF_Tables.get_DFTables(session, all_DB_tables())
         # for each DB table generate dataframe check for signal then update coin
         try:
-            for i, df in tables.items():
+            for i, dataf in tables.items():
                 coin = altcoins[i]
-                cross = DF_Tables.crossover(df)
-                coin.setPrice(df['Close'].iloc[-1])
+                cross = DF_Tables.crossover(dataf)
+                coin.df = dataf
+                coin.record = cross
+                coin.setPrice(dataf['Close'].iloc[-1])
                 transaction = cross['Transaction'].iloc[-1]
                 if not coin.trend() == transaction and coin.nextSignal(cross.index.max()):
                     coin.setTrend(transaction)
