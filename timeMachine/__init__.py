@@ -40,8 +40,3 @@ app = create_app()
 session = session_factory()
 main(session_factory)
 
-
-@app.shell_context_processor
-def make_shell_context():
-    """Create a shell context for Flask"""
-    return {'session': session, 'User': User, 'tables': all_DB_tables()}

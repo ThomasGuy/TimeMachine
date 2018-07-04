@@ -4,7 +4,6 @@ import threading
 log = logging.getLogger(__name__)
 
 # initialize globals
-
 interval = {'5m': 300, '15m': 900, '30m': 1800, '1h': 3600}
 altcoins = None
 

@@ -1,11 +1,15 @@
 from timeMachine.server import create_app, session_factory
 from timeMachine.crypto.initialize import main
+from timeMachine.database.models import User, Profile, all_DB_tables
 
+
+main(session_factory)
 
 app = create_app()
+@app.shell_context_processor
+def make_shell_context():
+    """Create a shell context for Flask"""
+    return {'session': session_factory(), 'User': User, 'Profile':Profile, \
+            'tables': all_DB_tables()}
 
-
-if __name__ == '__main__':
-    app.run(debug=True)
-    main(session_factory)
-
+app.run(debug=True)
