@@ -31,12 +31,12 @@ console.setFormatter(formatter)
 # add the handler to the root logger
 # logging.getLogger(__name__).addHandler(console)
 
-from timeMachine.server import create_app, session_factory
-from timeMachine.crypto.initialize import main
-from timeMachine.database.models import User, all_DB_tables
+# from timeMachine.server import create_app, session_factory
+# from timeMachine.crypto.initialize import main
+# from timeMachine.database.models import User, all_DB_tables
 
 
-app = create_app()
-session = session_factory()
-main(session_factory)
+# app = create_app()
+# session = session_factory()
+# main(session_factory)
 

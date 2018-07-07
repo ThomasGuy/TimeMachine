@@ -224,8 +224,6 @@ CryptoCompare_DB_Tables = {
     'waves': Waves,
     'steem': Steem,
     'rcn': Rcn,
-    'rlc': Rlc,
-    'elf': Elf,
     'mana': Mana
 }
 
@@ -251,7 +249,9 @@ DB_Tables = {
     'xlm': Xlm,
     'xmr': Xmr,
     'xrp': Xrp,
-    'zec': Zec
+    'zec': Zec,
+    'rlc': Rlc,
+    'elf': Elf
 }
 
 

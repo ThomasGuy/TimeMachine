@@ -3,7 +3,7 @@ import os
 # from timeMachine.database.base import db_name
 base_dir = os.path.abspath(os.path.dirname(__file__))
 delta = '15m'
-db_name = f'sqlite:///c:\\data\\sqlite\\db\\tickTocTesting{delta}.db'
+db_name = f'sqlite:///c:\\data\\sqlite\\db\\tickToc{delta}.db'
 
 
 class Config(object):

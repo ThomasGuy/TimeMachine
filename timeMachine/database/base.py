@@ -4,7 +4,6 @@ from sqlalchemy.orm import sessionmaker
 from timeMachine.config import Config
 
 # package imports
-# from timeMachine.database import models
 from .models import Base
 
 
