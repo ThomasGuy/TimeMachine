@@ -6,18 +6,17 @@ import pytz
 from sqlalchemy import func
 
 # from TimeMachine
-from .models import DB_Tables
 from ..crypto.utils import Return_API_response, Error_429
 
-
 log = logging.getLogger(__name__)
+
 
 class BitfinexAPI:
     """chunk_update will bring the DB up to date from Bitfinex API relative to
      the last DB entry"""
 
     @classmethod
-    def chunk(self, session,  delta, bitfinexURL, interval):
+    def chunk(self, session,  delta, bitfinexURL, interval, DB_Tables):
         resp = Return_API_response()
         for key, table in DB_Tables.items():
             # find time of last entry
@@ -28,7 +27,7 @@ class BitfinexAPI:
             else:
                 # How many 'intervals' since last entry
                 if delta in ('5m', '15m'):
-                    limit = int((datetime.utcnow() - query[0][0]).total_seconds() // interval[delta])
+                    limit = int((datetime.now() - query[0][0]).total_seconds() // interval[delta])
                 else:
                     limit = int((datetime.utcnow() - query[0][0]).total_seconds() // interval[delta])
             if limit > 1000:

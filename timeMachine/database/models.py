@@ -206,28 +206,32 @@ class Mana(MyMixin, Base):
 
 
 CryptoCompare_DB_Tables = {
-    'avt': Avt,
     'ada': Ada,
-    'xvg': Xvg,
     'xem': Xem,
     'ven': Ven,
     'bnb': Bnb,
     'bcn': Bcn,
     'icx': Icx,
     'lsk': Lsk,
-    'zil': Zil,
     'ont': Ont,
+    'zil': Zil,
     'ae': Ae,
-    'zrx': Zrx,
+    'zrx': Zrx
+}
+    
+CryptoCompare_hourly_Tables = {
     'dcr': Dcr,
     'nano': Nano,
-    'waves': Waves,
     'steem': Steem,
-    'rcn': Rcn,
+    'waves': Waves,
+    'xvg': Xvg
+}
+
+CryptoCompare_outsiders = {
     'mana': Mana
 }
 
-DB_Tables = {
+Bitfinex_DB_Tables = {
     'bch': Bch,
     'btc': Btc,
     'btg': Btg,
@@ -235,25 +239,33 @@ DB_Tables = {
     'eos': Eos,
     'etc': Etc,
     'eth': Eth,
-    'fun': Fun,
-    'gnt': Gnt,
     'iot': Iot,
     'ltc': Ltc,
     'neo': Neo,
     'omg': Omg,
-    'qsh': Qsh,
-    'qtm': Qtm,
-    'san': San,
-    'spk': Spk,
     'trx': Trx,
     'xlm': Xlm,
     'xmr': Xmr,
     'xrp': Xrp,
-    'zec': Zec,
+    'zec': Zec
+}
+
+Bitfinex_hourly_Tables = {
+    'elf': Elf,
+    'gnt': Gnt,
+    'qsh': Qsh,
+    'qtm': Qtm,
+    'san': San
+}
+
+Bitfinex_outsiders = {
+    'avt': Avt,
+    'fun': Fun,
+    'rcn': Rcn,
     'rlc': Rlc,
-    'elf': Elf
+    'spk': Spk
 }
 
 
 def all_DB_tables():
-    return {**CryptoCompare_DB_Tables, **DB_Tables}
+    return {**CryptoCompare_DB_Tables, **Bitfinex_DB_Tables, **Bitfinex_outsiders, **Bitfinex_hourly_Tables, **CryptoCompare_hourly_Tables, **CryptoCompare_outsiders}

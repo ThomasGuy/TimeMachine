@@ -6,7 +6,6 @@ import pandas as pd
 from sqlalchemy import func
 
 # from TimeMachine
-from .models import CryptoCompare_DB_Tables
 from ..crypto.utils import Return_API_response
 
 
@@ -17,9 +16,9 @@ class CompareAPI:
     """Chunk update for the CryptoCompare API"""
 
     @classmethod
-    def chunk(self, session,  delta, compareURL, interval):
+    def chunk(self, session,  delta, compareURL, interval, DB_Tables):
         resp = Return_API_response()
-        for key, table in CryptoCompare_DB_Tables.items():
+        for key, table in DB_Tables.items():
             try:
                 # find time of last entry
                 query = session.query(table.MTS).filter(

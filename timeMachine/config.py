@@ -1,15 +1,18 @@
 import os
 
-# from timeMachine.database.base import db_name
 base_dir = os.path.abspath(os.path.dirname(__file__))
 delta = '15m'
-db_name = f'sqlite:///c:\\data\\sqlite\\db\\tickToc{delta}.db'
+outsider = '3h'
+hour = '1h'
+db_name = f'sqlite:///c:\\data\\sqlite\\db\\Testing4_{delta}.db'
 
 
 class Config(object):
     """Configuration constants"""
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
     DELTA = delta
+    OUTSIDER = outsider
+    HOUR = hour
     DATABASE_URI = os.environ.get('DATABASE_URL') or db_name
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or db_name
     SQLALCHEMY_TRACK_MODIFICATIONS = False

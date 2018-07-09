@@ -8,6 +8,7 @@ import logging
 import json
 import sys, time
 import smtplib
+import warnings
 
 # Import Third-Party
 import requests
@@ -22,6 +23,9 @@ log = logging.getLogger(__name__)
 
 
 class Error_429(Exception):
+    pass
+
+class Empty_Table(Exception):
     pass
 
 
@@ -97,6 +101,8 @@ class DF_Tables:
             for i, table in dbTables.items():
                 data = session.query(table.MTS, table.Open, table.Close,
                                             table.High, table.Low).all()
+                if data == []:
+                    raise Empty_Table
                 df = pd.DataFrame([[item for item in tpl] for tpl in data],
                                     columns=('MTS', 'Open', 'Close', 'High', 'Low'))
                 df.set_index('MTS', drop=True, inplace=True)
@@ -112,6 +118,8 @@ class DF_Tables:
                 DF_Tables[i] = df
         except AttributeError:
             log.error(f'{i} in {table} ', exc_info=True)
+        except Empty_Table as err:
+            log.info(f'Empty Table {i} in {table} errors: {err.args}', exc_info=True)
         except Exception as err:
             raise(err)
         finally:
@@ -133,17 +141,20 @@ class DF_Tables:
         else:
             record.append([dataset.index[4], dataset['Close'].iloc[4], 'Sell'])
 
-        for date, row in dataset.iterrows():
-            if Higher:
-                # Sell condition
-                if row['sewma'] / row['bewma'] < 0.9965:
-                    record.append([date, row['Close'], 'Sell'])
-                    Higher = not Higher
-            else:
-                # Buy condition
-                if row['sewma'] / row['bewma'] > 1.0035:
-                    record.append([date, row['Close'], 'Buy'])
-                    Higher = not Higher
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=RuntimeWarning)
+            for date, row in dataset.iterrows():
+                if Higher:
+                    # Sell condition
+                    if row['sewma'] / row['bewma'] < 0.9965:
+                        record.append([date, row['Close'], 'Sell'])
+                        Higher = not Higher
+                else:
+                    # Buy condition
+                    if row['sewma'] / row['bewma'] > 1.0035:
+                        record.append([date, row['Close'], 'Buy'])
+                        Higher = not Higher
+
 
         cross = pd.DataFrame(record, columns=('Date Close Transaction').split())
         cross.set_index('Date', drop=True, inplace=True)

@@ -5,39 +5,38 @@ import time
 from .utils import Return_API_response
 from ..database.bitfinexAPI import BitfinexAPI
 from ..database.cryptoCompareAPI import CompareAPI
-from ..database.models import Bitfinex_DB_Tables, CryptoCompare_DB_Tables
+from ..database.models import Bitfinex_hourly_Tables, CryptoCompare_hourly_Tables
 
 log = logging.getLogger(__name__)
 
 bitfinexURL = 'https://api.bitfinex.com/v2/candles/trade:'
-compareURL = 'https://min-api.cryptocompare.com/data/histominute?'
+compareURL = 'https://min-api.cryptocompare.com/data/histohour?'
 
 
-def tickToc(delta, interval, Session):
+def hourly(delta, interval, Session):
     """Running in it's own thread this adds a new row to the DB tables"""
 
     while True:
         session = Session()
         try:
-            CompareAPI.chunk(session, delta, compareURL,
-                             interval, CryptoCompare_DB_Tables)
+            CompareAPI.chunk(session, delta, compareURL, interval, CryptoCompare_hourly_Tables)
         except:
             session.rollback()
-            log.error("CompareAPI Error", exc_info=True)
+            log.error("Hourly CompareAPI Error", exc_info=True)
         finally:
             session.close()
-            log.info('CompareAPI complete')
+            log.info('Hourly CompareAPI complete')
 
         session = Session()
         try:
             BitfinexAPI.chunk(session, delta, bitfinexURL,
-                              interval, Bitfinex_DB_Tables)
+                              interval, Bitfinex_hourly_Tables)
         except:
             session.rollback()
-            log.error("BitfinexAPI Error", exc_info=True)
+            log.error("Hourly BitfinexAPI Error", exc_info=True)
         finally:
             session.close()
-            log.info('BitfinexAPI, Ticktoc complete')
+            log.info('Hourly BitfinexAPI, Hourly complete')
 
         # set the tickTock ...
         time.sleep(interval[delta])

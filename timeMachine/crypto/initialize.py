@@ -4,7 +4,7 @@ import threading
 log = logging.getLogger(__name__)
 
 # initialize globals
-interval = {'5m': 300, '15m': 900, '30m': 1800, '1h': 3600}
+interval = {'5m': 300, '15m': 900, '30m': 1800, '1h': 3600, '3h': 10800}
 altcoins = None
 
 # From TimeMachine, initialize the DB
@@ -17,6 +17,8 @@ from .coin import Coin
 from .utils import DF_Tables
 from .tickToc import tickToc
 from .monitor import monitor
+from .outsider import outsider
+from .hourly import  hourly
 
 
 def _init_Coins(Session):
@@ -92,9 +94,24 @@ def main(Session):
     watcher.start()
     log.info(f"TickToc started {watcher.getName()}")
 
+
+    # wait then start Hourly
+    time.sleep(65)
+    peeker = threading.Thread(target=hourly, args=[Config.HOUR, interval, Session])
+    peeker.start()
+    log.info(f"Hourly started {peeker.getName()}")
+
+
+    # wait then start outsider
+    time.sleep(65)
+    stalker = threading.Thread(target=outsider, args=[Config.OUTSIDER, interval, Session])
+    stalker.start()
+    log.info(f"Outsider started {stalker.getName()}")
+
+
     # wait then start Monitor
     time.sleep(30)
     altcoins = _init_Coins(Session)
-    looking = threading.Thread(target=monitor, args=[Config.DELTA, interval, altcoins, Session])
-    looking.start()
-    log.info(f"Monitor started {looking.getName()}")
+    looker = threading.Thread(target=monitor, args=[Config.DELTA, interval, altcoins, Session])
+    looker.start()
+    log.info(f"Monitor started {looker.getName()}")
