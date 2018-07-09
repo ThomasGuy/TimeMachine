@@ -130,8 +130,8 @@ class DF_Tables:
 
     @classmethod
     def crossover(self, dataset):
-        """From DataFrame 'dataset'. Return a DataFrame of all crossing points
-         of the moving averages"""
+        """From DataFrame 'dataset'. Return a DataFrame of all the crossing points
+         of the small and medium moving averages"""
         record = []
         # Don't use 1st db record as it has equal SEWMA = BEWMA
         Higher = dataset.iloc[4]['sewma'] > dataset.iloc[4]['bewma']

@@ -11,49 +11,30 @@ import pandas as pd
 import logging
 
 # from Time Machine
-from ..database.models import all_DB_tables
+from .altcoin import Altcoin
 from .utils import Email, DF_Tables
-from .coin import Coin
 
 log = logging.getLogger(__name__)
 
 
-def monitor(delta, interval, altcoins, Session):
-    """Running in it's own thread monitor continually updates the Altcoins and
-    checks for any signals from the Moving Averages"""
-    
-    while True:
-        session = Session()
-        try:
-            Monitor.check(altcoins, session)
-        except:
-            session.rollback()
-            log.error('Oh deBugger', exc_info=True)
-        finally:
-            session.close()
-            log.info('Monitor complete')        
-
-        # set the sleep interval ...
-        time.sleep(interval[delta])
-
-
-class Monitor:
-    """This class is instantiated every interval. Monitoring each altcoin's
+class Monitor(Altcoin):
+    """This class is instantiated once for each thread. Monitoring each altcoin's
     DataFrame, upon a moving average signal sending out user emails. Updating 
-    each 'altcoin' instance with timestamp, trend and latest price"""
-    #def __init__(self, dbTables):
-        #self.session = session
+    each 'Coin' in Altcoin with timestamp, trend and latest price"""
+    def __init__(self, dbTables):
+        self.dbTables = dbTables
         
-    @classmethod
-    def check(self, altcoins, session):
-        tables = DF_Tables.get_DFTables(session, all_DB_tables())
-        # for each DB table generate dataframe check for signal then update coin
+
+    def check(self, session):
+        """ for each DB table generate dataframe, check for signal then update coin """
+        tables = DF_Tables.get_DFTables(session, self.dbTables)
+
         try:
             for i, dataf in tables.items():
-                coin = altcoins[i]
+                coin = self.altcoins[i]
                 cross = DF_Tables.crossover(dataf)
                 coin.df = dataf
-                coin.record = cross
+                coin.crossRecord = cross
                 coin.setPrice(dataf['Close'].iloc[-1])
                 transaction = cross['Transaction'].iloc[-1]
                 if not coin.trend() == transaction and coin.nextSignal(cross.index.max()):
@@ -61,4 +42,23 @@ class Monitor:
                     Email.sendEmail(coin.name(), transaction)
 
         except Exception:
-            log.error(f"Error with coin {coin.name()}", exc_info=True)
+            log.error(f"Monitor Error with coin ", exc_info=True)
+            raise
+
+
+    def initCoin(self, Session):
+        """ Set intial 'trend' Buy or Sell for each coin in dbTables"""
+        session = Session()
+        
+        try:
+            # for each DB table generate dataframe check for signal then update coin
+            tables = DF_Tables.get_DFTables(session, self.dbTables)
+            for i, df in tables.items():
+                coin = self.altcoins[i]
+                cross = DF_Tables.crossover(df)
+                coin.setTrend(cross['Transaction'].iloc[-1])
+        except IndexError:
+            log.error(
+                f'Init Altcoins IndexError for {coin.name()}', exc_info=True)
+        finally:
+            session.close()

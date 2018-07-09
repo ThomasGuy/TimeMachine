@@ -4,7 +4,7 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 delta = '15m'
 outsider = '3h'
 hour = '1h'
-db_name = f'sqlite:///c:\\data\\sqlite\\db\\Testing4_{delta}.db'
+db_name = f'sqlite:///c:\\data\\sqlite\\db\\tickToc{delta}.db'
 
 
 class Config(object):

@@ -8,14 +8,14 @@ log = logging.getLogger(__name__)
 
 
 class Coin:
-    """Altcoin class representing any of many altcoins"""
+    """Cryptocoin class representing any of many altcoins"""
     def __init__(self, name):
         self.altcoin = name
         self.currentPrice = None
         self.currentTrend = None
         self.previousSignal = datetime.datetime.utcnow()
-        self.df = pd.DataFrame()
-        self.record = pd.DataFrame()
+        self.dframe = pd.DataFrame()
+        self.crossRecord = pd.DataFrame()
 
     def nextSignal(self, tstamp):
         """Is the latest MA signal more recent than the last ?"""
@@ -47,26 +47,26 @@ class Coin:
     
 
     def plotData(self, title):
-        """plot self.df with self.record these are dataframes representing
+        """plot self.dframe with self.crossRecord these are dataframes representing
         the data and the crossover indicators"""
         fig = plt.figure(figsize=(16, 8))
         axes = fig.add_axes([0, 0, 1, 1])
-        # plot df
-        axes.plot(self.df.index, self.df['sewma'],
+        # plot dframe
+        axes.plot(self.dframe.index, self.dframe['sewma'],
                 label='ewma={}'.format(10), color='blue')
-        axes.plot(self.df.index, self.df['bewma'],
+        axes.plot(self.dframe.index, self.dframe['bewma'],
                 label='ewma={}'.format(27), color='red')
-        axes.plot(self.df.index, self.df['Close'],
+        axes.plot(self.dframe.index, self.dframe['Close'],
                 label='close', color='green', alpha=.5)
-        axes.plot(self.df.index, self.df['longewma'],
+        axes.plot(self.dframe.index, self.dframe['longewma'],
                 label=f'longma={74}', color='orange', alpha=.5)
-        axes.plot(self.df.index, self.df['High'],
+        axes.plot(self.dframe.index, self.dframe['High'],
                 label='high', color='pink', alpha=.5)
 
         # plot the crossover points
-        sold = pd.DataFrame(self.record[self.record['Transaction'] == 'Sell']['Close'])
+        sold = pd.DataFrame(self.crossRecord[self.crossRecord['Transaction'] == 'Sell']['Close'])
         axes.scatter(sold.index, sold['Close'], color='r', label='Sell', lw=3)
-        bought = pd.DataFrame(self.record[self.record['Transaction'] == 'Buy']['Close'])
+        bought = pd.DataFrame(self.crossRecord[self.crossRecord['Transaction'] == 'Buy']['Close'])
         axes.scatter(bought.index, bought['Close'], color='g', label='Sell', lw=3)
 
         axes.set_ylabel('closing price')

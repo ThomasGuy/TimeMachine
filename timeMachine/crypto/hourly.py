@@ -2,6 +2,7 @@ import logging
 import time
 
 # From TimeMachine
+from .monitor import Monitor
 from .utils import Return_API_response
 from ..database.bitfinexAPI import BitfinexAPI
 from ..database.cryptoCompareAPI import CompareAPI
@@ -11,10 +12,13 @@ log = logging.getLogger(__name__)
 
 bitfinexURL = 'https://api.bitfinex.com/v2/candles/trade:'
 compareURL = 'https://min-api.cryptocompare.com/data/histohour?'
+dbTables = {**Bitfinex_hourly_Tables, **CryptoCompare_hourly_Tables}
 
 
 def hourly(delta, interval, Session):
     """Running in it's own thread this adds a new row to the DB tables"""
+    monitor = Monitor(dbTables)
+    monitor.initCoin(Session)
 
     while True:
         session = Session()
@@ -27,6 +31,7 @@ def hourly(delta, interval, Session):
             session.close()
             log.info('Hourly CompareAPI complete')
 
+
         session = Session()
         try:
             BitfinexAPI.chunk(session, delta, bitfinexURL,
@@ -37,6 +42,17 @@ def hourly(delta, interval, Session):
         finally:
             session.close()
             log.info('Hourly BitfinexAPI, Hourly complete')
+
+
+        session = Session()
+        try:
+            monitor.check(session)
+        except:
+            session.rollback()
+            log.error('Oh Hourly monitor rollback', exc_info=True)
+        finally:
+            session.close()
+            log.info('Hourly Monitor complete')
 
         # set the tickTock ...
         time.sleep(interval[delta])
