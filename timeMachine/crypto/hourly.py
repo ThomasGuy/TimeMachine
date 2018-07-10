@@ -18,7 +18,7 @@ dbTables = {**Bitfinex_hourly_Tables, **CryptoCompare_hourly_Tables}
 def hourly(delta, interval, Session):
     """Running in it's own thread this adds a new row to the DB tables"""
     monitor = Monitor(dbTables)
-    monitor.initCoin(Session)
+    monitor.initCoin(Session, dbTables)
 
     while True:
         session = Session()

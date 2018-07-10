@@ -1,8 +1,14 @@
+import logging
+
+# package  imports
 from .coin import Coin
+from .utils import DF_Tables
+
+log = logging.getLogger(__name__)
 
 
 class Altcoin:
-        # Initialize coins
+    """ Initialize coins """
     altcoins = {
         'avt': Coin('Aventus (AVT)'),
         'bch': Coin('Bitcoin Cash (BTH)'),
@@ -48,3 +54,23 @@ class Altcoin:
         'steem': Coin('Steem (STEEM)'),
         'mana': Coin('Decentraland (MANA)')
     }
+
+
+    @classmethod
+    def initCoin(cls, Session, dbTables):
+        """ Set intial 'trend' Buy or Sell for each coin in dbTables"""
+        session = Session()
+
+        try:
+            # for each DB table generate dataframe check for signal then update coin
+            tables = DF_Tables.get_DFTables(session, dbTables)
+            for i, df in tables.items():
+                coin = cls.altcoins[i]
+                cross = DF_Tables.crossover(df)
+                coin.trend = cross['Transaction'].iloc[-1]
+                log.info(f'{coin}')
+        except IndexError:
+            log.error(
+                f'Init Altcoins IndexError for {coin.name()}', exc_info=True)
+        finally:
+            session.close()

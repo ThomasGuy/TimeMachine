@@ -18,13 +18,12 @@ dbTables = {**Bitfinex_DB_Tables, **CryptoCompare_DB_Tables}
 def tickToc(delta, interval, Session):
     """Running in it's own thread this adds a new row to the DB tables"""
     monitor = Monitor(dbTables)
-    monitor.initCoin(Session)
+    monitor.initCoin(Session, dbTables)
 
     while True:
         session = Session()
         try:
-            CompareAPI.chunk(session, delta, compareURL,
-                             interval, CryptoCompare_DB_Tables)
+            CompareAPI.chunk(session, delta, compareURL, interval, CryptoCompare_DB_Tables)
         except:
             session.rollback()
             log.error("CompareAPI Error", exc_info=True)
