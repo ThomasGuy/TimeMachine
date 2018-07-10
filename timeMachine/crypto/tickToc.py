@@ -17,8 +17,8 @@ dbTables = {**Bitfinex_DB_Tables, **CryptoCompare_DB_Tables}
 
 def tickToc(delta, interval, Session):
     """Running in it's own thread this adds a new row to the DB tables"""
-    monitor = Monitor(dbTables)
-    monitor.initCoin(Session, dbTables)
+    monitor = Monitor(Session, dbTables)
+    # monitor.initCoin(Session, dbTables)
 
     while True:
         session = Session()

@@ -20,7 +20,8 @@ class Monitor(Altcoin):
     """This class is instantiated once for each thread. Monitoring each altcoin's
     DataFrame, upon a moving average signal sending out user emails. Updating 
     each 'Coin' in Altcoin with timestamp, trend and latest price"""
-    def __init__(self, dbTables):
+    def __init__(self, Session, dbTables):
+        super().initCoin(Session, dbTables)
         self.dbTables = dbTables
         
 
@@ -39,7 +40,7 @@ class Monitor(Altcoin):
                 if not coin.trend == transaction and coin.nextSignal(cross.index.max()):
                     coin.trend = transaction
                     log.info(f'{coin}')
-                    Email.sendEmail(coin.name(), transaction)
+                    Email.sendEmail(coin.name, transaction)
 
         except Exception:
             log.error(f"Monitor Error with coin ", exc_info=True)

@@ -17,8 +17,8 @@ dbTables = {**Bitfinex_outsiders, **CryptoCompare_outsiders}
 
 def outsider(delta, interval, Session):
     """Longer interval 3 hour sample rate for the lowest volume coins"""
-    monitor = Monitor(dbTables)
-    monitor.initCoin(Session, dbTables)
+    monitor = Monitor(Session, dbTables)
+    # monitor.initCoin(Session, dbTables)
 
     while True:
         session = Session()

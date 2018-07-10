@@ -204,6 +204,9 @@ class Steem(MyMixin, Base):
 class Mana(MyMixin, Base):
     pass
 
+class Edo(MyMixin, Base):
+    pass
+
 
 CryptoCompare_DB_Tables = {
     'ada': Ada,
@@ -263,7 +266,8 @@ Bitfinex_outsiders = {
     'fun': Fun,
     'rcn': Rcn,
     'rlc': Rlc,
-    'spk': Spk
+    'spk': Spk,
+    'edo': Edo
 }
 
 

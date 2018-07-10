@@ -52,7 +52,8 @@ class Altcoin:
         'waves': Coin('Waves (WAVES)'),
         'elf': Coin('aelf (ELF'),
         'steem': Coin('Steem (STEEM)'),
-        'mana': Coin('Decentraland (MANA)')
+        'mana': Coin('Decentraland (MANA)'),
+        'edo': Coin('Eidoo (EDO)')
     }
 
 
@@ -62,11 +63,13 @@ class Altcoin:
         session = Session()
 
         try:
-            # for each DB table generate dataframe check for signal then update coin
+            # for each DB table generate dataframe then initialize coin
             tables = DF_Tables.get_DFTables(session, dbTables)
-            for i, df in tables.items():
+            for i, dataf in tables.items():
                 coin = cls.altcoins[i]
-                cross = DF_Tables.crossover(df)
+                cross = DF_Tables.crossover(dataf)
+                if dataf['Close'].iloc[-1]:
+                    coin.price = dataf['Close'].iloc[-1]
                 coin.trend = cross['Transaction'].iloc[-1]
                 log.info(f'{coin}')
         except IndexError:
