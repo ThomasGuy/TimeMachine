@@ -22,7 +22,7 @@ class MyCrypto:
         self.delta = delta
 
 
-    def getin(self, Session):
+    def getin(self, Session, msg):
         """Running in it's own thread this continually (frequency=delta) adds a
          new row to the Database"""
 
@@ -46,7 +46,7 @@ class MyCrypto:
                 log.error("CompareAPI Error", exc_info=True)
             finally:
                 session.close()
-                log.info(f'CompareAPI "{self.delta}" complete')
+                # log.info(f'CompareAPI "{self.delta}" complete')
 
             session = Session()
             try:
@@ -57,7 +57,7 @@ class MyCrypto:
                 log.error("BitfinexAPI Error", exc_info=True)
             finally:
                 session.close()
-                log.info(f'BitfinexAPI "{self.delta}" complete')
+                # log.info(f'BitfinexAPI "{self.delta}" complete')
 
             session = Session()
             try:
@@ -67,7 +67,8 @@ class MyCrypto:
                 log.error('Oh tickToc monitor rollback', exc_info=True)
             finally:
                 session.close()
-                log.info(f'"{self.delta}" Monitor complete')
+                # log.info(f'"{self.delta}" Monitor complete')
 
+            log.info(f'"{self.delta}" {msg} update completed')
             # set the tickTock ...
             time.sleep(interval[self.delta])

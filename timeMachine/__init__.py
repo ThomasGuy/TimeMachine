@@ -10,8 +10,8 @@ sys.path.insert(0, package_dir)
 
 # If applicable, delete the existing log file to generate a fresh log
 #  file during each execution
-if os.path.isfile(package_dir + "/logs/timeMachine.log"):
-    os.remove(package_dir + "/logs/timeMachine.log")
+# if os.path.isfile(package_dir + "/logs/timeMachine.log"):
+#     os.remove(package_dir + "/logs/timeMachine.log")
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
