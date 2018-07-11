@@ -15,8 +15,6 @@ class MyCrypto:
     'delta'.
     Collect data from Bitfinex and CryptoCompare monitor it, then
     save it to the Database """
-
-
     def __init__(self, Bitfinex_DB_Tables, CryptoCompare_DB_Tables, delta):
         self.Bitfinex_DB_Tables = Bitfinex_DB_Tables
         self.CryptoCompare_DB_Tables = CryptoCompare_DB_Tables
@@ -25,7 +23,8 @@ class MyCrypto:
 
 
     def getin(self, Session):
-        """Running in it's own thread this continually adds a new row to the DB tables"""
+        """Running in it's own thread this continually (frequency=delta) adds a
+         new row to the Database"""
 
         monitor = Monitor(Session, self.dbTables)
 
