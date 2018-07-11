@@ -43,7 +43,7 @@ class MyCrypto:
                                 interval, self.CryptoCompare_DB_Tables)
             except:
                 session.rollback()
-                log.error("CompareAPI Error", exc_info=True)
+                log.error(f'CompareAPI "{self.delta}" Error', exc_info=True)
             finally:
                 session.close()
                 # log.info(f'CompareAPI "{self.delta}" complete')
@@ -54,7 +54,7 @@ class MyCrypto:
                                 interval, self.Bitfinex_DB_Tables)
             except:
                 session.rollback()
-                log.error("BitfinexAPI Error", exc_info=True)
+                log.error(f'BitfinexAPI "{self.delta}" Error', exc_info=True)
             finally:
                 session.close()
                 # log.info(f'BitfinexAPI "{self.delta}" complete')
@@ -64,7 +64,7 @@ class MyCrypto:
                 monitor.check(session)
             except:
                 session.rollback()
-                log.error('Oh tickToc monitor rollback', exc_info=True)
+                log.error(f'Oh "{self.delta}" monitor rollback', exc_info=True)
             finally:
                 session.close()
                 # log.info(f'"{self.delta}" Monitor complete')
