@@ -14,9 +14,6 @@ import warnings
 import requests
 import pandas as pd
 
-# package imports
-# from ..database.base import session_factory as Session
-
 
 # Init Logging Facilities
 log = logging.getLogger(__name__)
