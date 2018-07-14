@@ -17,7 +17,7 @@ def main2(Session):
     # Start tickToc ( 15 mins )
     msg = 'TickToc'
     tickToc = MyCrypto(Bitfinex_DB_Tables, CryptoCompare_DB_Tables, Config.DELTA)
-    watcher = threading.Thread(target=tickToc.getin, args=[Session, msg])
+    watcher = threading.Thread(target=tickToc.getin, args=(Session, msg))
     watcher.start()
     log.info(f"TickToc started {watcher.getName()}")
 
@@ -33,6 +33,6 @@ def main2(Session):
     time.sleep(65)
     msg = 'Outsider'
     outsider = MyCrypto(Bitfinex_outsiders, CryptoCompare_outsiders, Config.OUTSIDER)
-    stalker = threading.Thread(target=outsider.getin, args=[Session, msg])
+    stalker = threading.Thread(target=outsider.getin, args=[Session, msg], kwargs={'showCoins':True})
     stalker.start()
     log.info(f"Outsider started {stalker.getName()}")

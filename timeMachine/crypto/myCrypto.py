@@ -22,7 +22,7 @@ class MyCrypto:
         self.delta = delta
 
 
-    def getin(self, Session, msg):
+    def getin(self, Session, msg, showCoins=False):
         """Running in it's own thread this continually (frequency=delta) adds a
          new row to the Database"""
 
@@ -70,5 +70,9 @@ class MyCrypto:
                 # log.info(f'"{self.delta}" Monitor complete')
 
             log.info(f'"{self.delta}" {msg} update completed')
+
+            if showCoins:
+                log.info(f'{monitor}')
+            
             # set the tickTock ...
             time.sleep(interval[self.delta])

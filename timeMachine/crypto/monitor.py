@@ -23,6 +23,10 @@ class Monitor(Altcoin):
     def __init__(self, Session, dbTables):
         super().initCoin(Session, dbTables)
         self.dbTables = dbTables
+
+        
+    def __repr__(self):
+        return super().__repr__()
         
 
     def check(self, session):
@@ -45,3 +49,6 @@ class Monitor(Altcoin):
         except Exception:
             log.error(f"Monitor Error with coin ", exc_info=True)
             raise
+
+
+

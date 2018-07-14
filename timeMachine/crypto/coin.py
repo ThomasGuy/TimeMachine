@@ -19,7 +19,7 @@ class Coin:
 
 
     def __repr__(self):
-        return f'<Coin> {self.name} price=${self.price} is on a "{self.trend}" trend since {self.previousSignal}'
+        return f'<Coin> {self.name} price=${self.price} is on a "{self.trend}" trend since {self.previousSignal} UTC'
 
 
     def nextSignal(self, tstamp):

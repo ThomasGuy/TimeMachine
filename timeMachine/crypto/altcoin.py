@@ -63,7 +63,7 @@ class Altcoin:
         session = Session()
 
         try:
-            # for each DB table generate dataframe then initialize coin
+            # for each DB table (Coin) generate dataframe then initialize coin
             tables = DF_Tables.get_DFTables(session, dbTables)
             for i, dataf in tables.items():
                 coin = cls.altcoins[i]
@@ -77,3 +77,10 @@ class Altcoin:
                 f'Init Altcoins IndexError for {coin.name()}', exc_info=True)
         finally:
             session.close()
+
+
+    def __repr__(self):
+        coins = '\n'
+        for coin in self.altcoins.values():
+            coins += coin.__repr__() + '\n'
+        return coins
