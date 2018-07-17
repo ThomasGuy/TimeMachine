@@ -88,12 +88,12 @@ class DF_Tables:
     """Generate a DataFrame for each DB_Table, reasmple back from the present
     time i.e. the right of the sample frequency interval. Add in the moving averages
     """
-    # Note I use the same index for DB, DF and altcoins
+    # Note I use the same dictionary index for DB, DF and altcoins
 
-    @classmethod
-    def get_DFTables(self, session, dbTables, sma=10, bma=27, lma=74, resample='6H'):
+    @staticmethod
+    def get_DFTables(session, dbTables, sma=10, bma=27, lma=74, resample='6H'):
         DF_Tables = {}
-        # session = Session()
+
         try:
             for i, table in dbTables.items():
                 data = session.query(table.MTS, table.Open, table.Close,
@@ -125,8 +125,8 @@ class DF_Tables:
         return DF_Tables
 
 
-    @classmethod
-    def crossover(self, dataset):
+    @staticmethod
+    def crossover(dataset):
         """From DataFrame 'dataset'. Return a DataFrame of all the crossing points
          of the small and medium moving averages"""
 
@@ -139,6 +139,7 @@ class DF_Tables:
         else:
             record.append([dataset.index[4], dataset['Close'].iloc[4], 'Sell'])
 
+        # Catch Numpy warning
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", category=RuntimeWarning)
             for date, row in dataset.iterrows():

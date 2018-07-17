@@ -13,7 +13,7 @@ from ..database.models import Bitfinex_DB_Tables, Bitfinex_hourly_Tables, \
 log = logging.getLogger(__name__)
 
 
-def main2(Session):
+def main(Session):
     # Start tickToc ( 15 mins )
     msg = 'TickToc'
     tickToc = MyCrypto(Bitfinex_DB_Tables, CryptoCompare_DB_Tables, Config.DELTA)

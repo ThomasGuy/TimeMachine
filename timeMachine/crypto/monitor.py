@@ -43,11 +43,11 @@ class Monitor(Altcoin):
                 transaction = cross['Transaction'].iloc[-1]
                 if not coin.trend == transaction and coin.nextSignal(cross.index.max()):
                     coin.trend = transaction
-                    log.info(f'{coin}')
+                    log.info(f'Transaction update: {coin}')
                     Email.sendEmail(coin.name, transaction)
 
         except Exception:
-            log.error(f"Monitor Error with coin ", exc_info=True)
+            log.error(f"Monitor Error with coin {coin.name}:- ", exc_info=True)
             raise
 
 

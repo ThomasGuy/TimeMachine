@@ -11,7 +11,7 @@ class Altcoin:
     """ Initialize coins """
     altcoins = {
         'avt': Coin('Aventus (AVT)'),
-        'bch': Coin('Bitcoin Cash (BTH)'),
+        'bch': Coin('Bitcoin Cash (BCH)'),
         'btc': Coin('Bitcoin (BTC)'),
         'btg': Coin('Bitcoin Gold (BTG)'),
         'dsh': Coin('Dash (DSH)'),
@@ -23,7 +23,7 @@ class Altcoin:
         'iot': Coin('Iota (IOT)'),
         'ltc': Coin('Litecoin (LTC)'),
         'neo': Coin('Neon (NEO)'),
-        'omg': Coin('Omisego'),
+        'omg': Coin('Omisego (OMG)'),
         'qsh': Coin('QASH (QSH)'),
         'qtm': Coin('Qtum (QTM)'),
         'rcn': Coin('Ripio Credit Network (RCN)'),
@@ -59,7 +59,7 @@ class Altcoin:
 
     @classmethod
     def initCoin(cls, Session, dbTables):
-        """ Set intial 'trend' Buy or Sell for each coin in dbTables"""
+        """ Initialize 'trend' Buy or Sell for each coin in dbTables"""
         session = Session()
 
         try:
@@ -71,7 +71,8 @@ class Altcoin:
                 if dataf['Close'].iloc[-1]:
                     coin.price = dataf['Close'].iloc[-1]
                 coin.trend = cross['Transaction'].iloc[-1]
-                log.info(f'{coin}')
+                coin.previousSignal = cross.index[-1]
+                log.info(f'Initialize: {coin}')
         except IndexError:
             log.error(
                 f'Init Altcoins IndexError for {coin.name()}', exc_info=True)
