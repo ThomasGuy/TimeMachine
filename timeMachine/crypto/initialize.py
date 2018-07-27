@@ -1,9 +1,9 @@
-import logging, time
+import logging
+import time
 import threading
 
 # From TimeMachine
 from timeMachine.config import Config
-from .utils import DF_Tables
 from .myCrypto import MyCrypto
 from ..database.models import Bitfinex_DB_Tables, Bitfinex_hourly_Tables, \
                         Bitfinex_outsiders, CryptoCompare_DB_Tables, \

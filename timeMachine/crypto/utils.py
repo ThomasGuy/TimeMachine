@@ -176,7 +176,3 @@ class Queue:
 
     def size(self):
         return len(self.items)
-
-
-if __name__=='__main__':
-    pass
