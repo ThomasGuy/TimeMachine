@@ -41,18 +41,16 @@ class CompareAPI:
                         f"fsym={sym}&tsym=USD&limit={limit}&aggregate={delta[:-1]}")
                     
                     if data['Type'] >= 100:
-                        df = pd.DataFrame(data['Data'])
-                        df['time'] = pd.to_datetime(df['time'], unit='s')
                         inventory = []
                         # Miss first row, CompareAPI gives us 1 extra row at he begining
-                        for i in range(1, len(df)):
+                        for row in data['Data']:
                             inventory.append(table(
-                                MTS=df.loc[i]['time'],
-                                Open=df.loc[i]['open'],
-                                Close=df.loc[i]['close'],
-                                High=df.loc[i]['high'],
-                                Low=df.loc[i]['low'], 
-                                Volume=df.loc[i][['volumefrom','volumeto']].sum()
+                                MTS=pd.to_datetime(row['time'], unit='s'),
+                                Open=row['open'],
+                                Close=row['close'],
+                                High=row['high'],
+                                Low=row['low'], 
+                                Volume=row['volumefrom'] + row['volumeto']
                                 ))
                         session.bulk_save_objects(inventory)
                         session.commit()

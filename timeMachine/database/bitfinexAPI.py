@@ -3,6 +3,7 @@ import logging
 import pytz
 
 # third party imports
+import pandas as pd
 from sqlalchemy import func
 
 # from TimeMachine
@@ -26,10 +27,7 @@ class BitfinexAPI:
                 limit = 1000
             else:
                 # How many 'intervals' since last entry
-                if delta in ('5m', '15m'):
-                    limit = int((datetime.now() - query[0][0]).total_seconds() // interval[delta])
-                else:
-                    limit = int((datetime.utcnow() - query[0][0]).total_seconds() // interval[delta])
+                limit = int((datetime.utcnow() - query[0][0]).total_seconds() // interval[delta])
             if limit > 1000:
                 log.error(f'Bitfinex DB missing data:= {key} limit={limit}')
                 limit = 1000
@@ -40,7 +38,7 @@ class BitfinexAPI:
                     inventory = []
                     for row in data:
                         inventory.append(table(
-                            MTS=datetime.fromtimestamp(row[0]/1000),
+                            MTS=pd.to_datetime(row[0],  unit='ms'),
                             Open=row[1],
                             Close=row[2],
                             High=row[3],
