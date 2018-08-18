@@ -1,8 +1,6 @@
-from datetime import datetime
-
 # Third party imports
 from sqlalchemy import Column, DateTime, Float, String, Integer, ForeignKey
-from sqlalchemy.orm import relationship, backref
+# from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 from flask_sqlalchemy_session import current_session as cs
 from flask_login import UserMixin
@@ -35,17 +33,17 @@ class User(UserMixin, Base):
 
 
 class Profile(Base):
-    __tablename__= 'profiles'
+    __tablename__ = 'profiles'
 
     profile_id = Column(Integer, primary_key=True)
     body = Column(String(255))
     user_id = Column(Integer(), ForeignKey('users.id'))
 
-    # user = relationship("User", backref=backref('profiles', order_by=profile_id))
+    # user = relationship("User",
+    # backref=backref('profiles', order_by=profile_id))
 
     def __repr__(self):
         return '<Profile {}>'.format(self.body)
-
 
 
 @login.user_loader
@@ -56,7 +54,7 @@ def load_user(id):
 class MyMixin(object):
 
     @declared_attr
-    def __tablename__(cls): # pylint: disable=E0213
+    def __tablename__(cls):            # pylint: disable=E0213
         return cls.__name__.lower()
 
     __table_args__ = {'mysql_engine': 'Sqlite'}
@@ -77,132 +75,175 @@ class MyMixin(object):
 
 class Avt(MyMixin, Base):
     pass
-    
+
+
 class Bch(MyMixin, Base):
     pass
+
 
 class Btc(MyMixin, Base):
     pass
 
+
 class Btg(MyMixin, Base):
     pass
-            
+
+
 class Dsh(MyMixin, Base):
     pass
-            
+
+
 class Eos(MyMixin, Base):
     pass
-            
+
+
 class Etc(MyMixin, Base):
     pass
+
 
 class Eth(MyMixin, Base):
     pass
 
+
 class Fun(MyMixin, Base):
     pass
+
 
 class Gnt(MyMixin, Base):
     pass
 
+
 class Iot(MyMixin, Base):
     pass
+
 
 class Ltc(MyMixin, Base):
     pass
 
+
 class Neo(MyMixin, Base):
     pass
+
 
 class Qsh(MyMixin, Base):
     pass
 
+
 class Qtm(MyMixin, Base):
     pass
+
 
 class Omg(MyMixin, Base):
     pass
 
+
 class Rcn(MyMixin, Base):
     pass
+
 
 class Rlc(MyMixin, Base):
     pass
 
+
 class San(MyMixin, Base):
     pass
+
 
 class Spk(MyMixin, Base):
     pass
 
+
 class Trx(MyMixin, Base):
     pass
+
 
 class Xlm(MyMixin, Base):
     pass
 
+
 class Xmr(MyMixin, Base):
     pass
+
 
 class Ada(MyMixin, Base):
     pass
 
+
 class Xvg(MyMixin, Base):
     pass
+
 
 class Xem(MyMixin, Base):
     pass
 
+
 class Ven(MyMixin, Base):
     pass
+
 
 class Bnb(MyMixin, Base):
     pass
 
+
 class Bcn(MyMixin, Base):
     pass
+
 
 class Icx(MyMixin, Base):
     pass
 
+
 class Lsk(MyMixin, Base):
     pass
+
 
 class Zil(MyMixin, Base):
     pass
 
+
 class Ont(MyMixin, Base):
     pass
+
 
 class Ae(MyMixin, Base):
     pass
 
+
 class Zrx(MyMixin, Base):
     pass
+
 
 class Dcr(MyMixin, Base):
     pass
 
+
 class Nano(MyMixin, Base):
     pass
+
 
 class Waves(MyMixin, Base):
     pass
 
+
 class Xrp(MyMixin, Base):
     pass
+
 
 class Zec(MyMixin, Base):
     pass
 
+
 class Elf(MyMixin, Base):
     pass
+
 
 class Steem(MyMixin, Base):
     pass
 
+
 class Mana(MyMixin, Base):
     pass
+
 
 class Edo(MyMixin, Base):
     pass
@@ -221,7 +262,7 @@ CryptoCompare_DB_Tables = {
     'ae': Ae,
     'zrx': Zrx
 }
-    
+
 CryptoCompare_hourly_Tables = {
     'dcr': Dcr,
     'nano': Nano,
@@ -272,4 +313,6 @@ Bitfinex_outsiders = {
 
 
 def all_DB_tables():
-    return {**CryptoCompare_DB_Tables, **Bitfinex_DB_Tables, **Bitfinex_outsiders, **Bitfinex_hourly_Tables, **CryptoCompare_hourly_Tables, **CryptoCompare_outsiders}
+    return {**CryptoCompare_DB_Tables, **Bitfinex_DB_Tables,
+            **Bitfinex_outsiders, **Bitfinex_hourly_Tables,
+            **CryptoCompare_hourly_Tables, **CryptoCompare_outsiders}

@@ -42,8 +42,8 @@ class CompareAPI:
                     
                     if data['Type'] >= 100:
                         inventory = []
-                        # Miss first row, CompareAPI gives us 1 extra row at he begining
-                        for row in data['Data']:
+                        # Miss first row, CompareAPI gives us 1 extra row at the begining
+                        for row in data['Data'][1:]:
                             inventory.append(table(
                                 MTS=pd.to_datetime(row['time'], unit='s'),
                                 Open=row['open'],
