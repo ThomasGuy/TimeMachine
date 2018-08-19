@@ -17,11 +17,9 @@ class Coin:
         self.dframe = pd.DataFrame()
         self.crossRecord = pd.DataFrame()
 
-
     def __repr__(self):
         return '<Coin> {:>27} price=${: 10.4f} is on a "{:4s}" trend since {}'. \
-                format(self.name, self.price, self.trend, self.previousSignal)
-
+            format(self.name, self.price, self.trend, self.previousSignal)
 
     def nextSignal(self, tstamp):
         """Is the latest MA signal more recent than the last ?"""
@@ -30,7 +28,6 @@ class Coin:
             return True
         return False
     
-
     def plotData(self, title):
         """plot self.dframe with self.crossRecord these are dataframes representing
         the data and the crossover indicators"""
@@ -38,15 +35,15 @@ class Coin:
         axes = fig.add_axes([0, 0, 1, 1])
         # plot dframe
         axes.plot(self.dframe.index, self.dframe['sewma'],
-                label='ewma={}'.format(10), color='blue')
+                  label='ewma={}'.format(10), color='blue')
         axes.plot(self.dframe.index, self.dframe['bewma'],
-                label='ewma={}'.format(27), color='red')
+                  label='ewma={}'.format(27), color='red')
         axes.plot(self.dframe.index, self.dframe['Close'],
-                label='close', color='green', alpha=.5)
+                  label='close', color='green', alpha=.5)
         axes.plot(self.dframe.index, self.dframe['longewma'],
-                label=f'longma={74}', color='orange', alpha=.5)
+                  label=f'longma={74}', color='orange', alpha=.5)
         axes.plot(self.dframe.index, self.dframe['High'],
-                label='high', color='pink', alpha=.5)
+                  label='high', color='pink', alpha=.5)
 
         # plot the crossover points
         sold = pd.DataFrame(self.crossRecord[self.crossRecord['Transaction'] == 'Sell']['Close'])

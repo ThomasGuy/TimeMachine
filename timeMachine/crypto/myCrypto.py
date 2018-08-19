@@ -21,7 +21,6 @@ class MyCrypto:
         self.dbTables = {**Bitfinex_DB_Tables, **CryptoCompare_DB_Tables}
         self.delta = delta
 
-
     def getin(self, Session, msg, showCoins=False):
         """Running in it's own thread this continually (frequency=delta) adds a
          new row to the Database"""
@@ -35,12 +34,11 @@ class MyCrypto:
         else:
             compareURL = 'https://min-api.cryptocompare.com/data/histohour?'
 
-
         while True:
             session = Session()
             try:
                 CompareAPI.chunk(session, self.delta, compareURL,
-                                interval, self.CryptoCompare_DB_Tables)
+                                 interval, self.CryptoCompare_DB_Tables)
             except:
                 session.rollback()
                 log.error(f'CompareAPI "{self.delta}" Error', exc_info=True)
@@ -51,7 +49,7 @@ class MyCrypto:
             session = Session()
             try:
                 BitfinexAPI.chunk(session, self.delta, bitfinexURL,
-                                interval, self.Bitfinex_DB_Tables)
+                                  interval, self.Bitfinex_DB_Tables)
             except:
                 session.rollback()
                 log.error(f'BitfinexAPI "{self.delta}" Error', exc_info=True)

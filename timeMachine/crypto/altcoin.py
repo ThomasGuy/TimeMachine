@@ -56,7 +56,6 @@ class Altcoin:
         'edo': Coin('Eidoo (EDO)')
     }
 
-
     @classmethod
     def initCoin(cls, Session, dbTables):
         """ Initialize 'trend' Buy or Sell for each coin in dbTables"""
@@ -78,7 +77,6 @@ class Altcoin:
                 f'Init Altcoins IndexError for {coin.name()}', exc_info=True)
         finally:
             session.close()
-
 
     def __repr__(self):
         coins = '\n'

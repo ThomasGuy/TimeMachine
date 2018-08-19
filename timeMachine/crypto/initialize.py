@@ -6,8 +6,7 @@ import threading
 from timeMachine.config import Config
 from .myCrypto import MyCrypto
 from ..database.models import Bitfinex_DB_Tables, Bitfinex_hourly_Tables, \
-                        Bitfinex_outsiders, CryptoCompare_DB_Tables, \
-                        CryptoCompare_hourly_Tables, CryptoCompare_outsiders
+    Bitfinex_outsiders, CryptoCompare_DB_Tables, CryptoCompare_hourly_Tables, CryptoCompare_outsiders
 
 
 log = logging.getLogger(__name__)
@@ -33,6 +32,6 @@ def main(Session):
     time.sleep(65)
     msg = 'Outsider'
     outsider = MyCrypto(Bitfinex_outsiders, CryptoCompare_outsiders, Config.OUTSIDER)
-    stalker = threading.Thread(target=outsider.getin, args=[Session, msg], kwargs={'showCoins':True})
+    stalker = threading.Thread(target=outsider.getin, args=[Session, msg], kwargs={'showCoins': True})
     stalker.start()
     log.info(f"Outsider started {stalker.getName()}")

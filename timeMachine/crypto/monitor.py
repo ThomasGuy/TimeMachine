@@ -1,6 +1,6 @@
 """
-Two Data structures used to translate the Database and update the State of the 
-altcoins. The dictionaries of DB_Tables and altcoins use the same keys, as do 
+Two Data structures used to translate the Database and update the State of the
+altcoins. The dictionaries of DB_Tables and altcoins use the same keys, as do
 the pandas DF_Tables which are generated from DB after every iteration.
 """
 
@@ -18,17 +18,15 @@ log = logging.getLogger(__name__)
 
 class Monitor(Altcoin):
     """This class is instantiated once for each thread. Monitoring each altcoin's
-    DataFrame, upon a moving average cross signal send out user emails. Updating 
+    DataFrame, upon a moving average cross signal send out user emails. Updating
     each 'Coin' in dbTables with timestamp, trend and latest price"""
     def __init__(self, Session, dbTables):
         super().initCoin(Session, dbTables)
         self.dbTables = dbTables
 
-        
     def __repr__(self):
         return super().__repr__()
         
-
     def check(self, session):
         """ for each DB table generate dataframe, check for signal then update coin """
         tables = DF_Tables.get_DFTables(session, self.dbTables)
@@ -49,6 +47,3 @@ class Monitor(Altcoin):
         except Exception:
             log.error(f"Monitor Error with coin {coin.name}:- ", exc_info=True)
             raise
-
-
-

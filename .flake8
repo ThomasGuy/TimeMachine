@@ -5,9 +5,12 @@ ignore =
     # file imported but unused
     F401
     # contiuation line over indented
-    E127
+    # E127
+    # logging use % formatter
+    W1203
 exclude =
     .git,
     __pycache__,
     timeMachine\server\static\css,
 max-complexity = 10
+max-line-length = 119

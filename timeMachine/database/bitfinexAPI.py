@@ -17,7 +17,7 @@ class BitfinexAPI:
      the last DB entry"""
 
     @classmethod
-    def chunk(self, session,  delta, bitfinexURL, interval, DB_Tables):
+    def chunk(self, session, delta, bitfinexURL, interval, DB_Tables):
         resp = Return_API_response()
         for key, table in DB_Tables.items():
             # find time of last entry
@@ -38,13 +38,13 @@ class BitfinexAPI:
                     inventory = []
                     for row in data:
                         inventory.append(table(
-                            MTS=pd.to_datetime(row[0],  unit='ms'),
+                            MTS=pd.to_datetime(row[0], unit='ms'),
                             Open=row[1],
                             Close=row[2],
                             High=row[3],
                             Low=row[4],
-                            Volume=row[5]
-                            ))
+                            Volume=row[5])
+                        )
                     session.bulk_save_objects(inventory)
                     session.commit()
                 except Error_429 as err:
@@ -52,4 +52,4 @@ class BitfinexAPI:
                 except Exception as err:
                     log.error(f'BitfinexAPI {key} {err.args}')
 
-        resp.close_session()          
+        resp.close_session()

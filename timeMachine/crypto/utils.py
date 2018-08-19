@@ -6,7 +6,8 @@ Provides utility functions used across more than one module or sub module.
 # Import Built-Ins
 import logging
 import json
-import sys, time
+import sys
+import time
 import smtplib
 import warnings
 
@@ -21,6 +22,7 @@ log = logging.getLogger(__name__)
 
 class Error_429(Exception):
     pass
+
 
 class Empty_Table(Exception):
     pass
@@ -47,7 +49,7 @@ class Return_API_response:
         except requests.exceptions.HTTPError as err:
             log.info(f'Raise_for_status: {err.__class__.__name__}')
             raise err
-            
+
         return data
 
     def close_session(self):
@@ -71,7 +73,6 @@ class Email:
         header += f'To: {to_addr}\n'
         header += 'Subject: MA-Alert\n'
         message = header + f'Moving average:- {name} advises {msg} indicator...'
-        
         smtpObj = smtplib.SMTP('smtp.stackmail.com', 587)
         smtpObj.ehlo()
         smtpObj.starttls()
@@ -79,7 +80,7 @@ class Email:
         sendmailStatus = smtpObj.sendmail('room4rent@buriramvillas.com', to_addr, message)
         if sendmailStatus != {}:
             log.error('There was a problem sending email to %s: %s' %
-                    (to_addr, sendmailStatus), exc_info=True)
+                      (to_addr, sendmailStatus), exc_info=True)
         smtpObj.quit()
         log.info(f"Email sent {name} is on '{msg}' trend")
 
@@ -96,15 +97,14 @@ class DF_Tables:
 
         try:
             for i, table in dbTables.items():
-                data = session.query(table.MTS, table.Open, table.Close,
-                                            table.High, table.Low).all()
+                data = session.query(table.MTS, table.Open, table.Close, table.High, table.Low).all()
                 if data == []:
                     raise Empty_Table
                 df = pd.DataFrame([[item for item in tpl] for tpl in data],
-                                    columns=('MTS', 'Open', 'Close', 'High', 'Low'))
+                                  columns=('MTS', 'Open', 'Close', 'High', 'Low'))
                 df.set_index('MTS', drop=True, inplace=True)
                 latest_timestamp = df.index.max()
-                base = latest_timestamp.hour + latest_timestamp.minute/60.0
+                base = latest_timestamp.hour + latest_timestamp.minute / 60.0
                 df.drop_duplicates()
                 df = df.groupby('MTS')['Open', 'Close', 'High', 'Low'].mean()
                 df = df.resample(rule=resample, closed='right', label='right', base=base).agg(
@@ -123,7 +123,6 @@ class DF_Tables:
             session.close()
 
         return DF_Tables
-
 
     @staticmethod
     def crossover(dataset):
@@ -154,12 +153,11 @@ class DF_Tables:
                         record.append([date, row['Close'], 'Buy'])
                         Higher = not Higher
 
-
         cross = pd.DataFrame(record, columns=('Date Close Transaction').split())
         cross.set_index('Date', drop=True, inplace=True)
         return cross
 
-                                                       
+
 class Queue:
     """Queue class"""
     def __init__(self):
