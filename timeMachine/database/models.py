@@ -256,7 +256,6 @@ CryptoCompare_DB_Tables = {
     'bnb': Bnb,
     'bcn': Bcn,
     'icx': Icx,
-    'lsk': Lsk,
     'ont': Ont,
     'zil': Zil,
     'ae': Ae,
@@ -265,6 +264,7 @@ CryptoCompare_DB_Tables = {
 
 CryptoCompare_hourly_Tables = {
     'dcr': Dcr,
+    'lsk': Lsk,
     'nano': Nano,
     'steem': Steem,
     'waves': Waves,
