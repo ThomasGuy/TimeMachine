@@ -7,7 +7,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # TimaMachine imports
-from timeMachine.server import login
+# from timeMachine.server import login
 
 
 Base = declarative_base()
@@ -46,9 +46,9 @@ class Profile(Base):
         return '<Profile {}>'.format(self.body)
 
 
-@login.user_loader
-def load_user(id):
-    return cs.query(User).get(int(id))
+# @login.user_loader
+# def load_user(id):
+#     return cs.query(User).get(int(id))
 
 
 class MyMixin(object):
