@@ -110,9 +110,9 @@ class DF_Tables:
                 df = df.resample(rule=resample, closed='right', label='right', base=base).agg(
                     {'Open': 'first', 'Close': 'last', 'High': 'max', 'Low': 'min'})
                 df['sewma'] = df['Close'].ewm(span=sma).mean()
-                df['bewma'] = df['Close'].ewm(span=bma).mean()
-                df['longewma'] = df['Close'].ewm(span=lma).mean()
-                DF_Tables[i] = df
+                df['bma'] = df['Close'].rolling(bma).mean()
+                df['lma'] = df['Close'].rolling(lma).mean()
+                DF_Tables[i] = df.iloc[bma:]
         except AttributeError:
             log.error(f'{i} in {table} ', exc_info=True)
         except Empty_Table as err:
@@ -130,13 +130,12 @@ class DF_Tables:
          of the small and medium moving averages"""
 
         record = []
-        # Don't use 1st db record as it has equal SEWMA = BEWMA
-        Higher = dataset.iloc[4]['sewma'] > dataset.iloc[4]['bewma']
+        Higher = dataset.iloc[0]['sewma'] > dataset.iloc[0]['bma']
         # initialize record[] ensures record is never empty
         if Higher:
-            record.append([dataset.index[4], dataset['Close'].iloc[4], 'Buy'])
+            record.append([dataset.index[0], dataset['Close'].iloc[0], 'Buy'])
         else:
-            record.append([dataset.index[4], dataset['Close'].iloc[4], 'Sell'])
+            record.append([dataset.index[0], dataset['Close'].iloc[0], 'Sell'])
 
         # Catch Numpy warning
         with warnings.catch_warnings():
@@ -144,12 +143,12 @@ class DF_Tables:
             for date, row in dataset.iterrows():
                 if Higher:
                     # Sell condition
-                    if row['sewma'] / row['bewma'] < 0.9965:
+                    if row['sewma'] / row['bma'] < 0.9965:
                         record.append([date, row['Close'], 'Sell'])
                         Higher = not Higher
                 else:
                     # Buy condition
-                    if row['sewma'] / row['bewma'] > 1.0035:
+                    if row['sewma'] / row['bma'] > 1.0035:
                         record.append([date, row['Close'], 'Buy'])
                         Higher = not Higher
 

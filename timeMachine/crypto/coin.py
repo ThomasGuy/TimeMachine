@@ -27,7 +27,7 @@ class Coin:
             self.previousSignal = tstamp
             return True
         return False
-    
+
     def plotData(self, title):
         """plot self.dframe with self.crossRecord these are dataframes representing
         the data and the crossover indicators"""

@@ -22,8 +22,8 @@ class MyCrypto:
         self.delta = delta
 
     def getin(self, Session, msg, showCoins=False):
-        """Running in it's own thread this continually (frequency=delta) adds a
-         new row to the Database"""
+        """Running in it's own thread continually, (frequency=delta) adds a
+         new row to the Database every delta"""
 
         monitor = Monitor(Session, self.dbTables)
 
@@ -39,7 +39,7 @@ class MyCrypto:
             try:
                 CompareAPI.chunk(session, self.delta, compareURL,
                                  interval, self.CryptoCompare_DB_Tables)
-            except:
+            except Exception:
                 session.rollback()
                 log.error(f'CompareAPI "{self.delta}" Error', exc_info=True)
             finally:
@@ -50,7 +50,7 @@ class MyCrypto:
             try:
                 BitfinexAPI.chunk(session, self.delta, bitfinexURL,
                                   interval, self.Bitfinex_DB_Tables)
-            except:
+            except Exception:
                 session.rollback()
                 log.error(f'BitfinexAPI "{self.delta}" Error', exc_info=True)
             finally:
@@ -60,7 +60,7 @@ class MyCrypto:
             session = Session()
             try:
                 monitor.check(session)
-            except:
+            except Exception:
                 session.rollback()
                 log.error(f'Oh "{self.delta}" monitor rollback', exc_info=True)
             finally:
@@ -71,6 +71,6 @@ class MyCrypto:
 
             if showCoins:
                 log.info(f'{monitor}')
-            
+
             # set the tickTock ...
             time.sleep(interval[self.delta])

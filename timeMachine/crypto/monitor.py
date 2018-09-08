@@ -26,7 +26,7 @@ class Monitor(Altcoin):
 
     def __repr__(self):
         return super().__repr__()
-        
+
     def check(self, session):
         """ for each DB table generate dataframe, check for signal then update coin """
         tables = DF_Tables.get_DFTables(session, self.dbTables)
