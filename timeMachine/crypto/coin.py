@@ -18,7 +18,7 @@ class Coin:
         self.crossRecord = pd.DataFrame()
 
     def __repr__(self):
-        return '<Coin> {:>27} price=${: 10.4f} is on a "{:4s}" trend since {}'. \
+        return '<Coin> {:>32} price=${: 10.4f} is on a "{:4s}" trend since {}'. \
             format(self.name, self.price, self.trend, self.previousSignal)
 
     def nextSignal(self, tstamp):
