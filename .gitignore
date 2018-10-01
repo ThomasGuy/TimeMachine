@@ -8,6 +8,6 @@ __pycache__
 
 *.log
 
-venv
+myenv/
 .env
 timeMachine\server\static\css\
