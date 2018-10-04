@@ -69,15 +69,15 @@ class Email:
     @staticmethod
     def sendEmail(name, msg, to_addr='twguy66@gmail.com'):
         """Send user email"""
-        header = 'From: room4rent@buriramvillas.com\n'
+        header = 'From: info@BuriramVillas.com\n'
         header += f'To: {to_addr}\n'
         header += 'Subject: MA-Alert\n'
         message = header + f'Moving average:- {name} advises {msg} indicator...'
         smtpObj = smtplib.SMTP('smtp.stackmail.com', 587)
         smtpObj.ehlo()
         smtpObj.starttls()
-        smtpObj.login('room4rent@buriramvillas.com', 'Sporty66')
-        sendmailStatus = smtpObj.sendmail('room4rent@buriramvillas.com', to_addr, message)
+        smtpObj.login('info@buriramvillas.com', 'Sporty66')
+        sendmailStatus = smtpObj.sendmail('info@buriramvillas.com', to_addr, message)
         if sendmailStatus != {}:
             log.error('There was a problem sending email to %s: %s' %
                       (to_addr, sendmailStatus), exc_info=True)

@@ -7,7 +7,7 @@ ignore =
     # contiuation line over indented
     # E127
     # logging use % formatter
-    W1203
+    # W1203
 exclude =
     .git,
     __pycache__,
