@@ -18,7 +18,7 @@ log = logging.getLogger(__name__)
 
 class Monitor(Altcoin):
     """This class is instantiated once for each thread. Monitoring each altcoin's
-    DataFrame, upon a moving average cross signal send out user emails. Updating
+    DataFrame, upon a moving average cross signal sends out user emails. Updating
     each 'Coin' in dbTables with timestamp, trend and latest price"""
     def __init__(self, Session, dbTables):
         super().initCoin(Session, dbTables)

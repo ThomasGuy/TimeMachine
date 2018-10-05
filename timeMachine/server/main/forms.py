@@ -9,5 +9,3 @@ from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Le
 from timeMachine.database.models import User
 
 log = logging.getLogger(__name__)
-
-

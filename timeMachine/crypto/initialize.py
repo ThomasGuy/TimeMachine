@@ -11,6 +11,10 @@ from ..database.models import Bitfinex_DB_Tables, Bitfinex_hourly_Tables, \
 
 log = logging.getLogger(__name__)
 
+"""
+Each 'delta' (time interval) create a seperate thread. Each thread is given its own set of coins (DB tables) to update
+"""
+
 
 def main(Session):
     # Start tickToc ( 15 mins )
