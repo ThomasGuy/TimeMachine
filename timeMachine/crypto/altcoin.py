@@ -50,7 +50,7 @@ class Altcoin:
         'dcr': Coin('Decred (DCR)'),
         'nano': Coin('Nano (NANO)'),
         'waves': Coin('Waves (WAVES)'),
-        'elf': Coin('aelf (ELF'),
+        'elf': Coin('aelf (ELF)'),
         'steem': Coin('Steem (STEEM)'),
         'mana': Coin('Decentraland (MANA)'),
         'edo': Coin('Eidoo (EDO)')

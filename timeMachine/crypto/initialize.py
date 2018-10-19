@@ -36,6 +36,6 @@ def main(Session):
     time.sleep(65)
     msg = 'Outsider'
     outsider = MyCrypto(Bitfinex_outsiders, CryptoCompare_outsiders, Config.OUTSIDER)
-    stalker = threading.Thread(target=outsider.getin, args=[Session, msg], kwargs={'showCoins': True})
-    stalker.start()
-    log.info(f"Outsider started {stalker.getName()}")
+    seeker = threading.Thread(target=outsider.getin, args=[Session, msg], kwargs={'showCoins': True})
+    seeker.start()
+    log.info(f"Outsider started {seeker.getName()}")
