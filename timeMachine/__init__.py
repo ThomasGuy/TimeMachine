@@ -13,7 +13,7 @@ sys.path.insert(0, package_dir)
 # if os.path.isfile(package_dir + "/logs/timeMachine.log"):
 #     os.remove(package_dir + "/logs/timeMachine.log")
 
-logging.basicConfig(level=logging.INFO,
+logging.basicConfig(level=logging.ERROR,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
                     datefmt='%m-%d %H:%M',
                     filename=package_dir + '/logs/timeMachine.log',
@@ -30,17 +30,3 @@ logging.basicConfig(level=logging.INFO,
 
 # add the handler to the root logger
 # logging.getLogger(__name__).addHandler(console)
-
-# from timeMachine.server import create_app, session_factory
-# # from timeMachine.crypto.initialize import main
-# from timeMachine.database.models import User, all_DB_tables
-
-
-# app = create_app()
-# session = session_factory()
-# # main(session_factory)
-
-
-# @app.shell_context_processor
-# def make_shell_context():
-#     return {'db': session, 'User': User, 'tables': all_DB_tables()}
