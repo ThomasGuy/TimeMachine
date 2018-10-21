@@ -2,6 +2,7 @@ import os
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 db_name = f'sqlite:///c:\\data\\sqlite\\db\\tickToc15m.db'
+MySqlDB = 'mysql+pymysql://TomRoot:Sporty66@mysql.stackcp.com:53548/ticktoctestDB-3637742e'
 
 
 class Config(object):
@@ -10,7 +11,7 @@ class Config(object):
     DELTA = '15m'
     OUTSIDER = '3h'
     HOUR = '1h'
-    DATABASE_URI = os.environ.get('DATABASE_URL') or db_name
+    DATABASE_URI = db_name
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or db_name
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

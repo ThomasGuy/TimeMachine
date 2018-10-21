@@ -1,4 +1,5 @@
 # Third party imports
+import pymysql
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from timeMachine.config import Config
