@@ -100,8 +100,7 @@ class DF_Tables:
                 data = session.query(table.MTS, table.Open, table.Close, table.High, table.Low).all()
                 if data == []:
                     raise Empty_Table
-                df = pd.DataFrame([[item for item in tpl] for tpl in data],
-                                  columns=('MTS', 'Open', 'Close', 'High', 'Low'))
+                df = pd.DataFrame(data)
                 df.set_index('MTS', drop=True, inplace=True)
                 latest_timestamp = df.index.max()
                 base = latest_timestamp.hour + latest_timestamp.minute / 60.0

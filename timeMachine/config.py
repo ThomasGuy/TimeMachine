@@ -12,7 +12,7 @@ class Config(object):
     OUTSIDER = '3h'
     HOUR = '1h'
     DATABASE_URI = db_name
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or db_name
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or db_name
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
