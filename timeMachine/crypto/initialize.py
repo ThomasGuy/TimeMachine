@@ -5,14 +5,15 @@ import threading
 # From TimeMachine
 from timeMachine.config import Config
 from .myCrypto import MyCrypto
-from ..database.models import Bitfinex_DB_Tables, Bitfinex_hourly_Tables, \
-    Bitfinex_outsiders, CryptoCompare_DB_Tables, CryptoCompare_hourly_Tables, CryptoCompare_outsiders
+from ..database.models import Bitfinex_DB_Tables, Bitfinex_hourly_Tables, Bitfinex_outsiders, \
+    CryptoCompare_DB_Tables, CryptoCompare_hourly_Tables, CryptoCompare_outsiders
 
 
 log = logging.getLogger(__name__)
 
 """
-Each 'delta' (time interval) create a seperate thread. Each thread is given its own set of coins (DB tables) to update
+For each 'delta' (time interval) create a seperate thread.
+Each thread is given its own set of coins (DB tables) to update
 """
 
 

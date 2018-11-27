@@ -34,7 +34,7 @@ class Monitor(Altcoin):
         try:
             for i, dataf in tables.items():
                 coin = self.altcoins[i]
-                cross = DF_Tables.crossover(dataf)
+                cross = DF_Tables.crossover(dataf[27 - 1:])
                 coin.df = dataf
                 coin.crossRecord = cross
                 coin.price = dataf['Close'].iloc[-1]

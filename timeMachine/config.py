@@ -11,8 +11,8 @@ class Config(object):
     DELTA = '15m'
     OUTSIDER = '3h'
     HOUR = '1h'
-    DATABASE_URI = db_name
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or db_name
+    DATABASE_URI = MySqlDB
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or MySqlDB
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     MAIL_SERVER = os.environ.get('MAIL_SERVER')

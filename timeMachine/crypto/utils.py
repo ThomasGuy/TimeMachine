@@ -111,7 +111,7 @@ class DF_Tables:
                 df['sewma'] = df['Close'].ewm(span=sma).mean()
                 df['bma'] = df['Close'].rolling(bma).mean()
                 df['lma'] = df['Close'].rolling(lma).mean()
-                DF_Tables[i] = df.iloc[bma:]
+                DF_Tables[i] = df
         except AttributeError:
             log.error(f'{i} in {table} ', exc_info=True)
         except Empty_Table as err:

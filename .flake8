@@ -12,5 +12,5 @@ exclude =
     .git,
     __pycache__,
     timeMachine\server\static\css,
-max-complexity = 10
+max-complexity = 12
 max-line-length = 119
