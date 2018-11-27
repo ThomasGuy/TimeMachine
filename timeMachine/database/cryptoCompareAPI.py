@@ -49,14 +49,14 @@ class CompareAPI:
                                 Open=row['open'],
                                 Close=row['close'],
                                 High=row['high'],
-                                Low=row['low'], 
+                                Low=row['low'],
                                 Volume=row['volumefrom'] + row['volumeto'])
                             )
                         session.bulk_save_objects(inventory)
                         session.commit()
                     else:
                         if data['Type'] == 99:
-                            log.info(f"CompareChunk {sym} {data['Message']}") 
+                            log.info(f"CompareChunk {sym} {data['Message']}")
 
                 except Exception as err:
                     log.error(f'CompareAPI - {key} {err.args}')

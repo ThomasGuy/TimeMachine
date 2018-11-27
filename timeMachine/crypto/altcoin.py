@@ -12,6 +12,7 @@ class Altcoin:
     altcoins = {
         'avt': Coin('Aventus (AVT)'),
         'bch': Coin('Bitcoin Cash (BCH)'),
+        'bab': Coin('Bitcoin Cash ABC (BAB)'),
         'btc': Coin('Bitcoin (BTC)'),
         'btg': Coin('Bitcoin Gold (BTG)'),
         'dsh': Coin('Dash (DSH)'),

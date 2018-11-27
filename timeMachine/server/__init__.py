@@ -6,7 +6,6 @@ from flask import Flask
 from flask_sqlalchemy_session import flask_scoped_session
 from flask_login import LoginManager
 from flask_mail import Mail
-from flask_bootstrap import Bootstrap
 
 # package imports
 from timeMachine.config import Config
@@ -17,7 +16,6 @@ log = logging.getLogger(__name__)
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 # mail = Mail()
-bootstrap = Bootstrap()
 
 
 def create_app(config_class=Config):
@@ -29,7 +27,6 @@ def create_app(config_class=Config):
 
     login_manager.init_app(app)
     # mail.init_mail(app)
-    bootstrap.init_app(app)
 
     from timeMachine.server.errors import bp as error_bp
     from timeMachine.server.auth import bp as auth_bp

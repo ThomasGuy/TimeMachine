@@ -2,7 +2,7 @@ import os
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 db_name = f'sqlite:///c:\\data\\sqlite\\db\\tickToc15m.db'
-MySqlDB = 'mysql+pymysql://TomRoot:Sporty66@mysql.stackcp.com:53548/ticktoctestDB-3637742e'
+MySqlDB = 'mysql+pymysql://TomRoot:Sporty66@mysql.stackcp.com:51228/ticktoctestDB-3637742e'
 
 
 class Config(object):

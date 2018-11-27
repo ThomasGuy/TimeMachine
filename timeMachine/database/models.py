@@ -46,11 +46,6 @@ class Profile(Base):
         return '<Profile {}>'.format(self.body)
 
 
-# @login.user_loader
-# def load_user(id):
-#     return cs.query(User).get(int(id))
-
-
 class MyMixin(object):
 
     @declared_attr
@@ -74,6 +69,10 @@ class MyMixin(object):
 
 
 class Avt(MyMixin, Base):
+    pass
+
+
+class Bab(MyMixin, Base):
     pass
 
 
@@ -251,6 +250,7 @@ class Edo(MyMixin, Base):
 
 CryptoCompare_DB_Tables = {
     'ada': Ada,
+    'bch': Bch,
     'xem': Xem,
     'ven': Ven,
     'bnb': Bnb,
@@ -276,8 +276,8 @@ CryptoCompare_outsiders = {
 }
 
 Bitfinex_DB_Tables = {
-    'bch': Bch,
     'btc': Btc,
+    'bab': Bab,
     'btg': Btg,
     'dsh': Dsh,
     'eos': Eos,
