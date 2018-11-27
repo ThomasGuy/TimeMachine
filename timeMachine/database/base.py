@@ -8,7 +8,7 @@ from timeMachine.config import Config
 from .models import Base
 
 
-engine = create_engine(Config.DATABASE_URI, pool_recycle=3000, echo=False)
+engine = create_engine(Config.DATABASE_URI, pool_recycle=3000, echo=False, pool_pre_ping=True)
 Base.metadata.create_all(engine)
 
 session_factory = sessionmaker(bind=engine)
