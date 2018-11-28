@@ -10,4 +10,4 @@ __pycache__
 
 myenv
 .env
-timeMachine\server\static\**\*.css
+\server\static\css\*.css

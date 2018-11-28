@@ -4,7 +4,7 @@ ignore =
     E402
     # file imported but unused
     F401
-    # contiuation line over indented
+    # continuation line over indented
     # E127
     # logging use % formatter
     W1203
