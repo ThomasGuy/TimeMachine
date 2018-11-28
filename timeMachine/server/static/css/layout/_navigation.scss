@@ -1,0 +1,27 @@
+.nav {
+  background-color: $primary-background;
+  display: flex;
+  justify-content: center;
+  padding: 5px 15px;
+  
+  .button {
+    flex: 1;
+    
+    &:nth-of-type(n+2) {
+      margin-left: 10px;
+    }
+  }
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  justify-content: center;
+
+}
+
+.menu {
+  ul { margin-top: 0; }
+
+}

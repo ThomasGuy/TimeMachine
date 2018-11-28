@@ -1,0 +1,27 @@
+/**
+ * Basic typography style for copy text
+ */
+body {
+  font-family: "Avenir Next", "Avenir", "Futura", "Verdana", "Roboto", sans-serif;
+  background: desaturate(darken($color-pink, 50%), 50%);
+  color: desaturate(lighten($color-pink, 50%), 50%);
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $header-copy;
+  margin: 0;
+}
+
+/**
+ * Basic styles for links
+ */
+a {
+  color: $text-color;
+  text-decoration: none;
+}

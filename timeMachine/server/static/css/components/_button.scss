@@ -1,0 +1,20 @@
+// -----------------------------------------------------------------------------
+// This file contains all styles related to the button component.
+// -----------------------------------------------------------------------------
+
+$button-color: saturate($secondary-background, 16%);
+
+.button {
+  @include on-event {
+    background-image: linear-gradient(to bottom, $light-brown, $button-color);
+  }
+  
+  background-image: linear-gradient(to bottom, $button-color, $light-brown);
+  border: 2px solid $black;
+  border-top: 0;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  max-width: 140px;
+  text-align: center;
+
+}

@@ -1,0 +1,82 @@
+// -----------------------------------------------------------------------------
+// This file contains all application-wide Sass variables.
+// -----------------------------------------------------------------------------
+
+
+/// text color
+/// @type Color
+$light-grey: rgb(237, 237, 237);
+$mid-grey: rgb(153, 153, 153);
+$dark-grey: rgb(68, 68, 68);
+$white: #fff;
+$off-white: #f5f5f5;
+$black: #000;
+
+$aqua1: #5cddee;
+$aqua2: #3ec0cf;
+$blue1: #3498db;
+$blue2: #2980b9;
+$brown: #744927;
+$light-brown: #a18881;
+$green1: #3ccc5d;
+$green2: #27ae60;
+$navy1: #3747ba;
+$navy2: #1f2194;
+$orange1: #eeaa14;
+$orange2: #d98712;
+$pink1: #ff49ea;
+$pink2: #eb25d9;
+$color-pink: #C6538C;
+$purple1: #9d52c7;
+$purple2: #7d28b2;
+$red1: #f23361;
+$red2: #ce371f;
+$yellow1: #f8ee15;
+$yellow2: #fdde27;
+$silver: #c2c2c2;
+$gold: #be9f57;
+
+
+/// text colors
+/// @type color
+$text-color: $black;
+$text-inverse: $off-white;
+$brand-color: $silver;
+
+$alert-text: $red1;
+$loud-text: $gold;
+$heading-text: $black;
+
+
+/// layout colors
+$primary-background: $aqua1;
+$secondary-background: $brown;
+$third-background: $aqua2;
+$fourth-background: $off-white;
+$inverse-background: $dark-grey;
+
+
+// Shadows
+$box-shadow1: 0 8px 8px rgba($black, 0.9);
+
+
+/// Container's maximum width
+/// @type Length
+$max-width: 1280px !default;
+
+
+/// Breakpoints map
+/// @prop {String} keys - Keys are identifiers mapped to a given length
+/// @prop {Map} values - Values are actual breakpoints expressed in pixels
+$breakpoints: (
+  'small': 320px,
+  'medium': 768px,
+  'large': 1024px,
+) !default;
+
+
+/// Relative or absolute URL where all assets are served from
+/// @type String
+/// @example scss - When using a CDN
+///   $base-url: 'http://cdn.example.com/assets/';
+$base-url: '/server/static/assets/' !default;

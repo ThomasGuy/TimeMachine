@@ -38,7 +38,7 @@ class MyCrypto:
                     log.error(f'CompareAPI "{self.delta}" Error', exc_info=True)
                 finally:
                     session.close()
-                    log.info(f'CompareAPI "{self.delta}" complete')
+                    # log.info(f'CompareAPI "{self.delta}" complete')
 
                 session = Session()
                 try:
@@ -49,7 +49,7 @@ class MyCrypto:
                     log.error(f'BitfinexAPI "{self.delta}" Error', exc_info=True)
                 finally:
                     session.close()
-                    log.info(f'BitfinexAPI "{self.delta}" complete')
+                    # log.info(f'BitfinexAPI "{self.delta}" complete')
 
                 log.info(f'"{self.delta}" {msg} update completed')
 

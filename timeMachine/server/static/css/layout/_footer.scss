@@ -1,0 +1,27 @@
+// -----------------------------------------------------------------------------
+// This file contains all styles related to the footer of the site/application.
+// -----------------------------------------------------------------------------
+footer {
+  background-color: $inverse-background;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px;
+
+  a {
+    @include hocus {
+      color: $black;
+      text-decoration: underline;
+    }
+
+    color: $navy1;
+  }
+}
+
+.social-media {
+  display: none;
+}
+
+.copyright {
+  font-size: 0.7rem;
+}

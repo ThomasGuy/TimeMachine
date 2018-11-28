@@ -42,8 +42,7 @@ class Profile(BaseModel):
     body = Column(String(255))
     user_id = Column(Integer(), ForeignKey('users.id'))
 
-    # user = relationship("User",
-    # backref=backref('profiles', order_by=profile_id))
+    # user = relationship("User", backref=backref('profiles', order_by=profile_id))
 
     def __repr__(self):
         return '<Profile {}>'.format(self.body)
@@ -52,10 +51,10 @@ class Profile(BaseModel):
 class MyMixin(object):
 
     @declared_attr
-    def __tablename__(cls):            # pylint: disable=E0213
+    def __tablename__(cls):  # pylint: disable=E0213
         return cls.__name__.lower()
 
-    __table_args__ = {'mysql_engine': 'Sqlite'}
+    __table_args__ = {'mysql_engine': 'innoDB'}
     __mapper_args__ = {'always_refresh': True}
 
     id = Column(Integer(), primary_key=True)
@@ -75,7 +74,7 @@ class Avt(MyMixin, BaseModel):
     pass
 
 
-class Bab(MyMixin, BaseModel):
+class Bab(MyMixin, Base):
     pass
 
 

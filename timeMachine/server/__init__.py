@@ -22,8 +22,9 @@ def create_app(config_class=Config):
     app = Flask('timeMachine.server')
     app.config.from_object(Config)
 
-    from timeMachine.database.base import session_factory
+    from timeMachine.database.base import session_factory, BaseModel
     Session = flask_scoped_session(session_factory, app)
+    BaseModel.set_session(Session)
 
     login_manager.init_app(app)
     # mail.init_mail(app)

@@ -10,6 +10,7 @@ ignore =
     W1203
 exclude =
     .git,
+    .vscode,
     __pycache__,
     timeMachine\server\static\css,
 max-complexity = 12

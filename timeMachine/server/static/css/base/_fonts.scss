@@ -1,0 +1,37 @@
+// -----------------------------------------------------------------------------
+// This file contains all @font-face declarations, if any.
+// -----------------------------------------------------------------------------
+
+/// Google fonts
+/// @type url
+@import url('https://fonts.googleapis.com/css?family=Raleway:300, 400, 700');
+@import url('https://fonts.googleapis.com/css?family=Lato&effect=shadow-multiple|3d-float|emboss:300,400,700,900');
+@import url('https://fonts.googleapis.com/css?family=Varela+Round');
+@import url('https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700');
+@import url('https://fonts.googleapis.com/css?family=Vollkorn:400,700');
+@import url('https://fonts.googleapis.com/css?family=Tangerine:400,700');
+@import url('https://fonts.googleapis.com/css?family=Abril+Fatface');
+
+
+/// Regular font family sans-serif
+/// @type List
+$text-font-stack: 'Open Sans', 'Helvetica Neue Light', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif !default;
+$header-copy: ('Raleway', 'Helvetica', 'Arial', sans-serif);
+$header2-copy: ('Lato', 'Helvetica', 'Arial', sans-serif);
+$caption-copy: ('Varela Round', 'Helvetica', 'Arial', sans-serif);
+$footer-copy: ('Helvetica Neue', 'Helvetica', 'Arial', sans-serif);
+$footer2-copy: ('Verdana', 'Arial', 'Helvetica', sans-serif);
+
+/// Regular font family serif
+/// @type List
+$body-copy: ('Georgia', 'Times New Roman', 'Times', serif);
+$body2-copy: ('Libre Baskerville', 'Palatino Linotype', 'Times', serif);
+$body3-copy: ('Vollkorn', 'Times', serif);
+
+$style-copy: ('Tangerine', cursive);
+$fatface-copy: ('Abril Fatface', cursive);
+
+/// Code (monospace) font family
+/// @type List
+$code-font-stack: 'Courier New', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Monaco', monospace !default;
+$code-copy: ('Courier New', 'Courier', monospace);
