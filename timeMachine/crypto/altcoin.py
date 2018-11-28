@@ -11,7 +11,8 @@ class Altcoin:
     """ Initialize coins """
     altcoins = {
         'avt': Coin('Aventus (AVT)'),
-        'bch': Coin('Bitcoin Cash (BCH)'),
+        'bch': Coin('Bitcoin Cash (BCH'),
+        'bchsv': Coin('Bitcoin Cash SV (BCHSV)'),
         'bab': Coin('Bitcoin Cash ABC (BAB)'),
         'btc': Coin('Bitcoin (BTC)'),
         'btg': Coin('Bitcoin Gold (BTG)'),

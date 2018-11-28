@@ -250,71 +250,90 @@ class Edo(MyMixin, BaseModel):
     pass
 
 
-CryptoCompare_DB_Tables = {
-    'ada': Ada,
-    'bch': Bch,
-    'xem': Xem,
-    'ven': Ven,
-    'bnb': Bnb,
-    'bcn': Bcn,
-    'icx': Icx,
-    'ont': Ont,
-    'zil': Zil,
-    'ae': Ae,
-    'zrx': Zrx
+class Bchsv(MyMixin, BaseModel):
+    pass
+
+
+Binance_Tables = {
+    '15m': {
+        'bchsv': Bchsv
+    },
+    '1h': {
+    },
+    '3h': {
+    }
 }
 
-CryptoCompare_hourly_Tables = {
-    'dcr': Dcr,
-    'lsk': Lsk,
-    'nano': Nano,
-    'steem': Steem,
-    'waves': Waves,
-    'xvg': Xvg
+CryptoCompare_Tables = {
+    '15m': {
+        'ada': Ada,
+        'bch': Bch,
+        'xem': Xem,
+        'ven': Ven,
+        'bnb': Bnb,
+        'bcn': Bcn,
+        'icx': Icx,
+        'ont': Ont,
+        'zil': Zil,
+        'ae': Ae,
+        'zrx': Zrx
+    },
+    '1h': {
+        'dcr': Dcr,
+        'lsk': Lsk,
+        'nano': Nano,
+        'steem': Steem,
+        'waves': Waves,
+        'xvg': Xvg
+    },
+    '3h': {
+        'mana': Mana
+    }
 }
 
-CryptoCompare_outsiders = {
-    'mana': Mana
-}
-
-Bitfinex_DB_Tables = {
-    'btc': Btc,
-    'bab': Bab,
-    'btg': Btg,
-    'dsh': Dsh,
-    'eos': Eos,
-    'etc': Etc,
-    'eth': Eth,
-    'iot': Iot,
-    'ltc': Ltc,
-    'neo': Neo,
-    'omg': Omg,
-    'trx': Trx,
-    'xlm': Xlm,
-    'xmr': Xmr,
-    'xrp': Xrp,
-    'zec': Zec
-}
-
-Bitfinex_hourly_Tables = {
-    'elf': Elf,
-    'gnt': Gnt,
-    'qsh': Qsh,
-    'qtm': Qtm,
-    'san': San
-}
-
-Bitfinex_outsiders = {
-    'avt': Avt,
-    'fun': Fun,
-    'rcn': Rcn,
-    'rlc': Rlc,
-    'spk': Spk,
-    'edo': Edo
+Bitfinex_Tables = {
+    '15m': {
+        'btc': Btc,
+        'bab': Bab,
+        'btg': Btg,
+        'dsh': Dsh,
+        'eos': Eos,
+        'etc': Etc,
+        'eth': Eth,
+        'iot': Iot,
+        'ltc': Ltc,
+        'neo': Neo,
+        'omg': Omg,
+        'trx': Trx,
+        'xlm': Xlm,
+        'xmr': Xmr,
+        'xrp': Xrp,
+        'zec': Zec
+    },
+    '1h': {
+        'elf': Elf,
+        'gnt': Gnt,
+        'qsh': Qsh,
+        'qtm': Qtm,
+        'san': San
+    },
+    '3h': {
+        'avt': Avt,
+        'fun': Fun,
+        'rcn': Rcn,
+        'rlc': Rlc,
+        'spk': Spk,
+        'edo': Edo
+    }
 }
 
 
 def all_DB_tables():
-    return {**CryptoCompare_DB_Tables, **Bitfinex_DB_Tables,
-            **Bitfinex_outsiders, **Bitfinex_hourly_Tables,
-            **CryptoCompare_hourly_Tables, **CryptoCompare_outsiders}
+    compare = {**CryptoCompare_Tables['15m'], **CryptoCompare_Tables['1h'], **CryptoCompare_Tables['3h']}
+    bitfinex = {**Bitfinex_Tables['15m'], **Bitfinex_Tables['1h'], **Bitfinex_Tables['3h']}
+    binance = {**Binance_Tables['15m'], **Binance_Tables['1h'], **Binance_Tables['3h']}
+    return {**compare, **bitfinex, **binance}
+
+
+def delta_tables(delta):
+    return {**Bitfinex_Tables[delta], **CryptoCompare_Tables[delta], **Binance_Tables[delta]}

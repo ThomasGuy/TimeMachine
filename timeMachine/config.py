@@ -2,6 +2,7 @@ import os
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 db_name = f'sqlite:///c:\\data\\sqlite\\db\\tickToc15m.db'
+db_name2 = f'sqlite:///c:\\data\\sqlite\\db\\master_db.db'
 MySqlDB = 'mysql+pymysql://TomRoot:Sporty66@mysql.stackcp.com:51228/ticktoctestDB-3637742e'
 
 

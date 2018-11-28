@@ -8,6 +8,7 @@ from sqlalchemy import func
 
 # from TimeMachine
 from ..crypto.utils import Return_API_response, Error_429
+from ..database.models import Bitfinex_Tables, CryptoCompare_Tables, Binance_Tables
 
 log = logging.getLogger(__name__)
 
@@ -45,9 +46,9 @@ class Bitfinex(CryptoAPI):
     endpoint = 'https://api.bitfinex.com/v2/candles/trade:'
     maxLimit = 1000
 
-    def __init__(self, DB_Tables, delta, interval):
+    def __init__(self, delta, interval):
         super().__init__(delta, self.maxLimit, interval)
-        self.DB_Tables = DB_Tables
+        self.DB_Tables = Bitfinex_Tables[delta]
 
     def chunk(self, session, conn):
         resp = Return_API_response()
@@ -75,9 +76,9 @@ class Compare(CryptoAPI):
     endpoint_hour = 'https://min-api.cryptocompare.com/data/histohour?'
     maxLimit = 2000
 
-    def __init__(self, DB_Tables, delta, interval):
+    def __init__(self, delta, interval):
         super().__init__(delta, self.maxLimit, interval)
-        self.DB_Tables = DB_Tables
+        self.DB_Tables = CryptoCompare_Tables[delta]
 
     def chunk(self, session, conn):
         resp = Return_API_response()
@@ -104,4 +105,36 @@ class Compare(CryptoAPI):
                 except Exception as err:
                     log.error(f'CompareAPI - {key} {err.args}')
                 self.updateDB(DF, table, conn)
+        resp.close_session()
+
+
+class Binance(CryptoAPI):
+    """ Bitfinex API get lastest data chunk"""
+
+    endpoint = 'https://api.binance.com/api/v1/klines'
+    maxLimit = 1000
+
+    def __init__(self, delta, interval):
+        super().__init__(delta, self.maxLimit, interval)
+        self.DB_Tables = Binance_Tables[delta]
+
+    def chunk(self, session, conn):
+        resp = Return_API_response()
+        for key, table in self.DB_Tables.items():
+            limit = self._numRecords(key, table, session)
+            if limit > 0:
+                sym = key.upper() + 'USDT'
+                try:
+                    data = resp.api_response(self.endpoint + f'?symbol={sym}&interval={self.delta}&limit={limit}')
+                    df = pd.DataFrame(data, columns=['MTS', 'Open', 'High', 'Low', 'Close', 'Volume',
+                                                     'MTS_close', 'a', 'b', 'c', 'd', 'e'])
+                    df.drop(['MTS_close', 'a', 'b', 'c', 'd', 'e'], inplace=True, axis=1)
+                    df['MTS'] = pd.to_datetime(df['MTS'], unit='ms')
+                    df.set_index('MTS', drop=True, inplace=True)
+                    df = df[['Open', 'Close', 'High', 'Low', 'Volume']]
+                except Error_429 as err:
+                    log.info(f'Bitfinex {key} 429 error {err.args}')
+                except Exception as err:
+                    log.error(f'BitfinexAPI {key} {err.args}')
+                self.updateDB(df, table, conn)
         resp.close_session()

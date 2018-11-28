@@ -3,7 +3,7 @@ import time
 
 # package imports
 from .monitor import Monitor
-from ..database.cryptoAPIs import Bitfinex, Compare
+from ..database.cryptoAPIs import Bitfinex, Compare, Binance
 from ..database.base import engine
 
 
@@ -16,40 +16,45 @@ class MyCrypto:
 
     interval = {'15m': 900, '1h': 3600, '3h': 10800, '6h': 21600, '1D': 86400}
 
-    def __init__(self, Bitfinex_DB_Tables, Compare_DB_Tables, delta, **kwargs):
-        self.Bitfinex_DB_Tables = Bitfinex_DB_Tables
-        self.Compare_DB_Tables = Compare_DB_Tables
-        self.dbTables = {**Bitfinex_DB_Tables, **Compare_DB_Tables}
+    def __init__(self, delta, **kwargs):
         self.delta = delta
 
     def getin(self, Session, msg, showCoins=False):
         """(frequency=delta) adds bulk rows to the Database"""
 
-        monitor = Monitor(Session, self.dbTables)
+        monitor = Monitor(Session, self.delta)
 
         while True:
             with engine.begin() as conn:
                 session = Session()
                 try:
-                    compare = Compare(self.Compare_DB_Tables, self.delta, self.interval[self.delta])
+                    compare = Compare(self.delta, self.interval[self.delta])
                     compare.chunk(session, conn)
                 except Exception:
                     session.rollback()
                     log.error(f'CompareAPI "{self.delta}" Error', exc_info=True)
                 finally:
                     session.close()
-                    # log.info(f'CompareAPI "{self.delta}" complete')
 
                 session = Session()
                 try:
-                    bitfinex = Bitfinex(self.Bitfinex_DB_Tables, self.delta, self.interval[self.delta])
+                    bitfinex = Bitfinex(self.delta, self.interval[self.delta])
                     bitfinex.chunk(session, conn)
                 except Exception:
                     session.rollback()
                     log.error(f'BitfinexAPI "{self.delta}" Error', exc_info=True)
                 finally:
                     session.close()
-                    # log.info(f'BitfinexAPI "{self.delta}" complete')
+
+                session = Session()
+                try:
+                    binance = Binance(self.delta, self.interval[self.delta])
+                    binance.chunk(session, conn)
+                except Exception:
+                    session.rollback()
+                    log.error(f'BinanceAPI "{self.delta}" Error', exc_info=True)
+                finally:
+                    session.close()
 
                 log.info(f'"{self.delta}" {msg} update completed')
 

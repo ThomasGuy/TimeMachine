@@ -12,6 +12,7 @@ import logging
 # from Time Machine
 from .altcoin import Altcoin
 from .utils import Email, DF_Tables
+from ..database.models import delta_tables
 
 log = logging.getLogger(__name__)
 
@@ -20,9 +21,9 @@ class Monitor(Altcoin):
     """This class is instantiated once for each thread. Monitoring each altcoin's
     DataFrame, upon a moving average cross signal sends out user emails. Updating
     each 'Coin' in dbTables with timestamp, trend and latest price"""
-    def __init__(self, Session, dbTables):
-        super().initCoin(Session, dbTables)
-        self.dbTables = dbTables
+    def __init__(self, Session, delta):
+        self.dbTables = delta_tables(delta)
+        super().initCoin(Session, self.dbTables)
 
     def __repr__(self):
         return super().__repr__()
@@ -34,7 +35,7 @@ class Monitor(Altcoin):
         try:
             for i, dataf in tables.items():
                 coin = self.altcoins[i]
-                cross = DF_Tables.crossover(dataf[27 - 1:])
+                cross = DF_Tables.crossover(dataf[27:])
                 coin.df = dataf
                 coin.crossRecord = cross
                 coin.price = dataf['Close'].iloc[-1]
