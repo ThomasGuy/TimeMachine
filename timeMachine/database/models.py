@@ -274,6 +274,8 @@ CryptoCompare_Tables = {
         'bcn': Bcn,
         'icx': Icx,
         'ont': Ont,
+        'omg': Omg,
+        'trx': Trx,
         'zil': Zil,
         'ae': Ae,
         'zrx': Zrx
@@ -303,8 +305,6 @@ Bitfinex_Tables = {
         'iot': Iot,
         'ltc': Ltc,
         'neo': Neo,
-        'omg': Omg,
-        'trx': Trx,
         'xlm': Xlm,
         'xmr': Xmr,
         'xrp': Xrp,
