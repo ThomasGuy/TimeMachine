@@ -68,7 +68,7 @@ class MyCrypto:
                 session.close()
                 # log.info(f'"{self.delta}" Monitor complete')
 
-            log.info(f'"{self.delta}" {msg} update completed')
+            # log.info(f'"{self.delta}" {msg} update completed')
 
             if showCoins:
                 log.info(f'{monitor}')

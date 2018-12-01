@@ -12,7 +12,7 @@ class Coin:
     def __init__(self, name):
         self.name = name
         self.price = 0.0
-        self.trend = None
+        self.trend = 'n/a'
         self.previousSignal = datetime.datetime.utcnow()
         self.dframe = pd.DataFrame()
         self.crossRecord = pd.DataFrame()

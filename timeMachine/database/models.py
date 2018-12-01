@@ -267,7 +267,7 @@ Binance_Tables = {
 CryptoCompare_Tables = {
     '15m': {
         'ada': Ada,
-        'bch': Bch,
+        # 'bch': Bch,
         'xem': Xem,
         'ven': Ven,
         'bnb': Bnb,

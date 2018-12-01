@@ -21,7 +21,7 @@ def main(Session):
     tickToc = MyCrypto(Config.DELTA)
     watcher = threading.Thread(target=tickToc.getin, args=(Session, msg))
     watcher.start()
-    log.info(f"TickToc started {watcher.getName()}")
+    log.info(f"TickToc started {watcher.getName()} - id - {watcher.ident}")
 
     # wait then start Hourly ( 1 hour )
     time.sleep(65)
@@ -29,12 +29,12 @@ def main(Session):
     hourly = MyCrypto(Config.HOUR)
     peeker = threading.Thread(target=hourly.getin, args=[Session, msg])
     peeker.start()
-    log.info(f"Hourly started {peeker.getName()}")
+    log.info(f"Hourly started {peeker.getName()} - id - {peeker.ident}")
 
     # wait then start outsider ( 3 hours )
     time.sleep(65)
     msg = 'Outsider'
     outsider = MyCrypto(Config.OUTSIDER)
-    seeker = threading.Thread(target=outsider.getin, args=[Session, msg], kwargs={'showCoins': True})
+    seeker = threading.Thread(target=outsider.getin, args=[Session, msg], kwargs={'showCoins':True})
     seeker.start()
-    log.info(f"Outsider started {seeker.getName()}")
+    log.info(f"Outsider started {seeker.getName()} - id - {seeker.ident}")
