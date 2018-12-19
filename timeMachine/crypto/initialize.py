@@ -15,11 +15,11 @@ Each thread is given its own set of coins (DB tables) to update
 """
 
 
-def main(Session):
+def main():
     # Start tickToc ( 15 mins )
     msg = 'TickToc'
     tickToc = MyCrypto(Config.DELTA)
-    watcher = threading.Thread(target=tickToc.getin, args=(Session, msg))
+    watcher = threading.Thread(target=tickToc.getin, args=[msg])
     watcher.start()
     log.info(f"TickToc started {watcher.getName()} - id - {watcher.ident}")
 
@@ -27,7 +27,7 @@ def main(Session):
     time.sleep(65)
     msg = 'Hourly'
     hourly = MyCrypto(Config.HOUR)
-    peeker = threading.Thread(target=hourly.getin, args=[Session, msg])
+    peeker = threading.Thread(target=hourly.getin, args=[msg])
     peeker.start()
     log.info(f"Hourly started {peeker.getName()} - id - {peeker.ident}")
 
@@ -35,6 +35,6 @@ def main(Session):
     time.sleep(65)
     msg = 'Outsider'
     outsider = MyCrypto(Config.OUTSIDER)
-    seeker = threading.Thread(target=outsider.getin, args=[Session, msg], kwargs={'showCoins':True})
+    seeker = threading.Thread(target=outsider.getin, args=[msg], kwargs={'showCoins': True})
     seeker.start()
     log.info(f"Outsider started {seeker.getName()} - id - {seeker.ident}")

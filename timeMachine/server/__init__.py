@@ -22,9 +22,8 @@ def create_app(config_class=Config):
     app = Flask('timeMachine.server')
     app.config.from_object(Config)
 
-    from timeMachine.database.base import session_factory, BaseModel
-    Session = flask_scoped_session(session_factory, app)
-    BaseModel.set_session(Session)
+    from timeMachine import session_factory
+    flask_scoped_session(session_factory, app)
 
     login_manager.init_app(app)
     # mail.init_mail(app)
@@ -36,7 +35,7 @@ def create_app(config_class=Config):
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(main_bp)
 
-    from TickTocTest.ticktoctest.models import User
+    from timeMachine.database.models import User
     from flask_sqlalchemy_session import current_session as cs
 
     @login_manager.user_loader
@@ -60,7 +59,7 @@ def create_app(config_class=Config):
             # app.logger.addHandler(mail_handler)
             log.addHandler(mail_handler)
 
-    return app, Session
+    return app
 
 
 from timeMachine.database import models

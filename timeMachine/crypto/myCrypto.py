@@ -1,10 +1,13 @@
 import logging
 import time
 
+# third party imports
+from sqlalchemy.orm import scoped_session
+
 # package imports
 from .monitor import Monitor
 from ..database.cryptoAPIs import Bitfinex, Compare, Binance
-from ..database.base import engine
+from timeMachine import engine, session_factory
 
 
 log = logging.getLogger(__name__)
@@ -18,15 +21,16 @@ class MyCrypto:
 
     def __init__(self, delta, **kwargs):
         self.delta = delta
+        self.Session = scoped_session(session_factory)
 
-    def getin(self, Session, msg, showCoins=False):
+    def getin(self, msg, showCoins=False):
         """(frequency=delta) adds bulk rows to the Database"""
 
-        monitor = Monitor(Session, self.delta)
+        monitor = Monitor(self.Session, self.delta)
 
         while True:
             with engine.begin() as conn:
-                session = Session()
+                session = self.Session()
                 try:
                     compare = Compare(self.delta, self.interval[self.delta])
                     compare.chunk(session, conn)
@@ -36,7 +40,7 @@ class MyCrypto:
                 finally:
                     session.close()
 
-                session = Session()
+                session = self.Session()
                 try:
                     bitfinex = Bitfinex(self.delta, self.interval[self.delta])
                     bitfinex.chunk(session, conn)
@@ -46,7 +50,7 @@ class MyCrypto:
                 finally:
                     session.close()
 
-                session = Session()
+                session = self.Session()
                 try:
                     binance = Binance(self.delta, self.interval[self.delta])
                     binance.chunk(session, conn)
@@ -58,7 +62,7 @@ class MyCrypto:
 
                 log.info(f'"{self.delta}" {msg} update completed')
 
-            session = Session()
+            session = self.Session()
             try:
                 monitor.check(session)
             except Exception:
@@ -67,8 +71,6 @@ class MyCrypto:
             finally:
                 session.close()
                 # log.info(f'"{self.delta}" Monitor complete')
-
-            # log.info(f'"{self.delta}" {msg} update completed')
 
             if showCoins:
                 log.info(f'{monitor}')

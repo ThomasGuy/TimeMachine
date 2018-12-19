@@ -88,15 +88,15 @@ class Compare(CryptoAPI):
                 endpoint = self.endpoint_minute if self.delta == '15m' else self.endpoint_hour
                 try:
                     sym = key.upper()
-                    data = resp.api_response(endpoint +
-                                             f"fsym={sym}&tsym=USD&limit={limit}&aggregate={self.delta[:-1]}&e=CCCAGG")
+                    data = resp.api_response(
+                        endpoint + f"fsym={sym}&tsym=USD&limit={limit}&aggregate={self.delta[:-1]}&e=CCCAGG")
                     if data['Type'] >= 100:
                         DF = pd.DataFrame(data['Data'][1:])
                         DF['MTS'] = pd.to_datetime(DF['time'], unit='s')
                         DF['Volume'] = DF['volumefrom'] + DF['volumeto']
                         DF.drop(['time', 'volumefrom', 'volumeto'], inplace=True, axis=1)
                         DF.set_index('MTS', drop=True, inplace=True)
-                        DF.rename(index=str, columns={'close': 'Close', 'open': 'Open', 'low': 'Low', 'high': 'High'},
+                        DF.rename(columns={'close': 'Close', 'open': 'Open', 'low': 'Low', 'high': 'High'},
                                   inplace=True)
                         DF = DF[['Open', 'Close', 'High', 'Low', 'Volume']]
                     else:

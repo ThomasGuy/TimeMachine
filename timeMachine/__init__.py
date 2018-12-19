@@ -3,6 +3,16 @@ import os
 import logging
 import logging.config
 
+# Third party imports
+import pymysql
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+# package imports
+from timeMachine.config import Config
+from timeMachine.database.models import Base
+
+
 current_dir = os.path.dirname(os.path.realpath(__file__))
 package_dir = os.path.realpath(os.path.join(current_dir, os.pardir))
 sys.path.insert(0, package_dir)
@@ -30,3 +40,8 @@ logging.basicConfig(level=logging.INFO,
 
 # add the handler to the root logger
 # logging.getLogger(__name__).addHandler(console)
+
+engine = create_engine(Config.DATABASE_URI, pool_recycle=3000, echo=False, pool_pre_ping=True)
+Base.metadata.create_all(engine)
+
+session_factory = sessionmaker(bind=engine)

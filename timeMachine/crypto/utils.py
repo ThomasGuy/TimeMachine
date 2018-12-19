@@ -106,8 +106,10 @@ class DF_Tables:
                 base = latest_timestamp.hour + latest_timestamp.minute / 60.0
                 df.drop_duplicates()
                 df = df.groupby('MTS')['Open', 'Close', 'High', 'Low'].mean()
-                df = df.resample(rule=resample, closed='right', label='right', base=base).agg(
-                    {'Open': 'first', 'Close': 'last', 'High': 'max', 'Low': 'min'})
+                df = df.resample(rule=resample, closed='right', label='right', base=base).agg({'Open': 'first',
+                                                                                               'Close': 'last',
+                                                                                               'High': 'max',
+                                                                                               'Low': 'min'})
                 df['sewma'] = df['Close'].ewm(span=sma).mean()
                 df['bma'] = df['Close'].rolling(bma).mean()
                 df['lma'] = df['Close'].rolling(lma).mean()
@@ -117,6 +119,7 @@ class DF_Tables:
         except Empty_Table as err:
             log.info(f'Empty Table {i} in {table} errors: {err.args}', exc_info=True)
         except Exception as err:
+            log.error(f'What is wrong: {i} {table} \n', exec_info=True)
             raise(err)
         finally:
             session.close()
