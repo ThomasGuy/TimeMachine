@@ -304,6 +304,7 @@ Bitfinex_Tables = {
         'zec': Zec
     },
     '1h': {
+        'edo': Edo,
         'elf': Elf,
         'gnt': Gnt,
         'qsh': Qsh,
@@ -315,8 +316,7 @@ Bitfinex_Tables = {
         'fun': Fun,
         'rcn': Rcn,
         'rlc': Rlc,
-        'spk': Spk,
-        'edo': Edo
+        'spk': Spk
     }
 }
 
