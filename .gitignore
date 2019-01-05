@@ -11,3 +11,4 @@ __pycache__
 myenv
 .env
 \server\static\css\*.css
+\server\static\css\*.css.map

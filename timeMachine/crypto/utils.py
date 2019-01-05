@@ -44,7 +44,7 @@ class Return_API_response:
                 raise Error_429
 
             res.raise_for_status()
-        except Error_429 as err:
+        except Error_429:
             raise Error_429
         except requests.exceptions.HTTPError as err:
             log.info(f'Raise_for_status: {err.__class__.__name__}')
@@ -92,7 +92,7 @@ class DF_Tables:
     # Note I use the same dictionary index for DB, DF and altcoins
 
     @staticmethod
-    def get_DFTables(session, dbTables, sma=10, bma=27, lma=74, resample='6H'):
+    def get_DFTables(session, dbTables, sma=20, bma=55, lma=140, resample='6H'):
         DF_Tables = {}
 
         try:

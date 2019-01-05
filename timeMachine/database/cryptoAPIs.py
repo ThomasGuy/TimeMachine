@@ -72,11 +72,14 @@ class Bitfinex(CryptoAPI):
 class Compare(CryptoAPI):
     """ CryptoCompare API """
 
+    APIkey = '484cb8d70ed62517ecfec5b4666fb83c8e62944a4b460222d72becd39d6e4412'
     endpoint_minute = 'https://min-api.cryptocompare.com/data/histominute?'
     endpoint_hour = 'https://min-api.cryptocompare.com/data/histohour?'
     maxLimit = 2000
 
     def __init__(self, delta, interval):
+        self.maxLimit = int(self.maxLimit / int(delta[:-1]))
+        self.endpoint = self.endpoint_minute if delta[-1] == 'm' else self.endpoint_hour
         super().__init__(delta, self.maxLimit, interval)
         self.DB_Tables = CryptoCompare_Tables[delta]
 
@@ -85,11 +88,11 @@ class Compare(CryptoAPI):
         for key, table in self.DB_Tables.items():
             limit = self._numRecords(key, table, session)
             if limit > 0:
-                endpoint = self.endpoint_minute if self.delta == '15m' else self.endpoint_hour
                 try:
                     sym = key.upper()
                     data = resp.api_response(
-                        endpoint + f"fsym={sym}&tsym=USD&limit={limit}&aggregate={self.delta[:-1]}&e=CCCAGG")
+                        self.endpoint + f"fsym={sym}&tsym=USD&limit={limit}&aggregate={self.delta[:-1]} \
+                                          &e=CCCAGG&api_key={self.APIkey}")
                     if data['Type'] >= 100:
                         DF = pd.DataFrame(data['Data'][1:])
                         DF['MTS'] = pd.to_datetime(DF['time'], unit='s')
