@@ -12,7 +12,7 @@ class Config(object):
     DELTA = '15m'
     OUTSIDER = '3h'
     HOUR = '1h'
-    DATABASE_URI = remoteSQL
+    DATABASE_URI = master
     # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or MySqlDB
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

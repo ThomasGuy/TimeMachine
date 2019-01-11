@@ -45,10 +45,10 @@ class Return_API_response:
 
             res.raise_for_status()
         except Error_429:
-            raise Error_429
+            raise
         except requests.exceptions.HTTPError as err:
             log.info(f'Raise_for_status: {err.__class__.__name__}')
-            raise err
+            raise
 
         return data
 

@@ -34,16 +34,9 @@ class Monitor(Altcoin):
 
         try:
             for i, dataf in tables.items():
+                cross = DF_Tables.crossover(dataf[55:])
                 coin = self.altcoins[i]
-                cross = DF_Tables.crossover(dataf[27:])
-                coin.df = dataf
-                coin.crossRecord = cross
-                coin.price = dataf['Close'].iloc[-1]
-                transaction = cross['Transaction'].iloc[-1]
-                if not coin.trend == transaction and coin.nextSignal(cross.index.max()):
-                    coin.trend = transaction
-                    log.info(f'Transaction update: {coin}')
-                    Email.sendEmail(coin.name, transaction)
+                coin.update(dataf, cross)
 
         except Exception:
             log.error(f"Monitor Error with coin {coin.name}:- ", exc_info=True)

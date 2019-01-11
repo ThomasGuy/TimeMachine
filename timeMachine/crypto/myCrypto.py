@@ -24,7 +24,7 @@ class MyCrypto:
         self.delta = delta
         self.Session = scoped_session(session_factory)
         self.monitor = Monitor(self.Session, self.delta)
-        self.compare = CompareAPI(self.delta, self.interval[self.delta])
+        self.compare = CompareAPI(self.delta)
         self.bitfinex = Bitfinex(self.delta, self.interval[self.delta])
         self.binance = Binance(self.delta, self.interval[self.delta])
 
