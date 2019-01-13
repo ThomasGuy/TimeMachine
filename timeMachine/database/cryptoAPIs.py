@@ -106,7 +106,7 @@ class Compare(CryptoAPI):
                         if data['Type'] == 99:
                             log.info(f"CompareChunk {sym} {data['Message']}")
                 except Exception as err:
-                    log.error(f'CompareAPI - {key} {err.args}')
+                    log.error(f'CompareAPI - {key} {err.args}', exec_info=True)
                 self.updateDB(DF, table, conn)
         resp.close_session()
 
@@ -136,8 +136,8 @@ class Binance(CryptoAPI):
                     df.set_index('MTS', drop=True, inplace=True)
                     df = df[['Open', 'Close', 'High', 'Low', 'Volume']]
                 except Error_429 as err:
-                    log.info(f'Bitfinex {key} 429 error {err.args}')
+                    log.info(f'Binance {key} 429 error {err.args}')
                 except Exception as err:
-                    log.error(f'BitfinexAPI {key} {err.args}')
+                    log.error(f'BinanceAPI {key} {err.args}')
                 self.updateDB(df, table, conn)
         resp.close_session()

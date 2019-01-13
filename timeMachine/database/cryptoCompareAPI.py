@@ -28,7 +28,7 @@ class CompareAPI:
 
     def __init__(self, delta):
         self.delta = delta
-        self.DB_Tables = CryptoCompare_Tables[delta]
+        self._tables = CryptoCompare_Tables[delta]
 
     def updateDB(self, df, table, conn):
         df.to_sql(con=conn, name=table.__tablename__, index=True, chunksize=100, if_exists='append')
@@ -37,7 +37,7 @@ class CompareAPI:
         endpoint = f'https://min-api.cryptocompare.com/data/{self.period[self.delta[-1]]}?'
         to_date = int(datetime.now().timestamp())
         resp = Return_API_response()
-        for key, table in self.DB_Tables.items():
+        for key, table in self._tables.items():
             query = session.query(table.MTS)
             query = query.filter(table.MTS == session.query(func.max(table.MTS))).first()
             from_date = int(query[0].timestamp())
@@ -58,10 +58,10 @@ class CompareAPI:
                         date = ipdata['TimeFrom']
                     else:
                         raise DataError(f"CompareChunk {sym} {ipdata['Type']} {ipdata['Message']}")
-            except DataError as err:
-                log.info(err.args)
-            except Exception as err:
-                log.error(f'CompareAPI - {key} {err.args}', exec_info=True)
+            except DataError as e:
+                log.info(e)
+            except Exception as e:
+                log.error(f'CompareAPI - {key} {e}', exec_info=True)
             else:
                 DF = pd.concat(holder, axis=0)
                 DF = DF[DF['time'] > from_date]

@@ -37,20 +37,12 @@ class Return_API_response:
         self.sesh = requests.Session()
 
     def api_response(self, url):
-        try:
-            res = self.sesh.get(url)
-            data = res.json()
-            if res.status_code == 429:
-                raise Error_429
-
+        res = self.sesh.get(url)
+        if res.status_code == 429:
+            raise Error_429
+        if res.status_code != 200:
             res.raise_for_status()
-        except Error_429:
-            raise
-        except requests.exceptions.HTTPError as err:
-            log.info(f'Raise_for_status: {err.__class__.__name__}')
-            raise
-
-        return data
+        return res.json()
 
     def close_session(self):
         self.sesh.close()
@@ -125,6 +117,25 @@ class DF_Tables:
             session.close()
 
         return DF_Tables
+
+    @staticmethod
+    def getTable(session, table, sma=20, bma=55, lma=140, resample='6H'):
+        data = session.query(table.MTS, table.Open, table.Close, table.High, table.Low).all()
+        if data == []:
+            raise Empty_Table
+        df = pd.DataFrame(data)
+        df.set_index('MTS', drop=True, inplace=True)
+        latest_timestamp = df.index.max()
+        base = latest_timestamp.hour + latest_timestamp.minute / 60.0
+        df.drop_duplicates()
+        df = df.groupby('MTS')['Open', 'Close', 'High', 'Low'].mean()
+        df = df.resample(rule=resample, closed='right', label='right', base=base).agg({'Open': 'first',
+                                                                                       'Close': 'last',
+                                                                                       'High': 'max',
+                                                                                       'Low': 'min'})
+        df['sewma'] = df['Close'].ewm(span=sma).mean()
+        df['bma'] = df['Close'].rolling(bma).mean()
+        df['lma'] = df['Close'].rolling(lma).mean()
 
     @staticmethod
     def crossover(dataset):

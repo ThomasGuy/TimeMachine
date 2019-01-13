@@ -13,33 +13,33 @@ log = logging.getLogger(__name__)
 
 class Coin:
     """Cryptocoin class representing one of many altcoins"""
-    def __init__(self, name):
+    def __init__(self, name, dataf, cross):
         self.name = name
-        self.price = 0.0
-        self.trend = 'n/a'
-        self.previousSignal = datetime.datetime.utcnow()
-        self.dframe = pd.DataFrame()
-        self.crossRecord = pd.DataFrame()
+        self._df = dataf
+        self.price = self._df['Close'].iloc[-1]
+        self._cross = cross
+        self.trend = self._cross['Transaction'].iloc[-1]
+        self._previousSignal = self._cross.index[-1]
         self._value_lock = threading.Lock()
 
     def __repr__(self):
         return '<Coin> {:>32} price=${: 10.4f} is on a "{:4s}" trend since {}'. \
-            format(self.name, self.price, self.trend, self.previousSignal)
+            format(self.name, self.price, self.trend, self._previousSignal)
 
     def nextSignal(self, tstamp):
         """Is the latest MA signal more recent than the last ?"""
-        if tstamp > self.previousSignal:
-            self.previousSignal = tstamp
+        if tstamp > self._previousSignal:
+            self._previousSignal = tstamp
             return True
         return False
 
     def update(self, dataf, cross):
         with self._value_lock:
-            self.dframe = dataf
-            self.crossRecord = cross
+            self._df = dataf
+            self._cross = cross
             self.price = dataf['Close'].iloc[-1]
             transaction = cross['Transaction'].iloc[-1]
             if not self.trend == transaction and self.nextSignal(cross.index.max()):
                 self.trend = transaction
-                log.info(f'Transaction update: {self}')
+                log.info(f'Transaction update: {self}\n')
                 Email.sendEmail(self.name, transaction)
