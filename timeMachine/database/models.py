@@ -19,7 +19,7 @@ class User(UserMixin, Base):
     password_hash = Column(String(128))
 
     # 1 to 1 relationship with Portfolio
-    portfolio = relationship("Portfolio", cascade="all, delete, delete-orphan")
+    portfolio = relationship("Portfolio", cascade="all, delete, delete-orphan", uselist=False, back_populates="user")
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -42,7 +42,7 @@ class Portfolio(Base):
 
     # 1 to 1 relationship with User
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    user = relationship("User")
+    user = relationship("User", back_populates="portfolio")
     # 1 to many relationship with bank
     bank = relationship("Bank", cascade="all, delete, delete-orphan")
 
@@ -58,6 +58,10 @@ class Portfolio(Base):
     @hybrid_property
     def my_portfolio(self):
         return [(row.coin_id, row.amount) for row in self.bank]
+
+    @hybrid_property
+    def my_coins(self):
+        return {row.coin_id for row in self.bank}
 
     @hybrid_method
     def i_have(self, altcoin):

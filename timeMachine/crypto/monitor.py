@@ -22,7 +22,7 @@ class Altcoin(dict):
     def __repr__(self):
         li = ''
         for key in self.keys():
-            li = li + self[key] + ',\n'
+            li = li + self[key] + '\n'
         return li
 
 

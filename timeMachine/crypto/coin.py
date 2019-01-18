@@ -4,7 +4,6 @@ import threading
 
 # 3rd party imports
 import pandas as pd
-import matplotlib.pyplot as plt
 
 # package imports
 from .utils import Email
