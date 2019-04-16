@@ -1,17 +1,18 @@
 import os
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
-db_name = f'sqlite:///c:\\data\\sqlite\\db\\tickToc15m.db'
-MySqlDB = 'mysql+pymysql://TomRoot:Sporty66@mysql.stackcp.com:51228/ticktoctestDB-3637742e'
-master = f'sqlite:///c:\\data\\sqlite\\db\\master_db.db'
+db_name = 'sqlite:///c:\\data\\sqlite\\db\\tickToc15m.db'
+remoteSQL = 'mysql+pymysql://TomRoot:Sporty66@mysql.stackcp.com:51228/ticktoctestDB-3637742e'
+master = 'sqlite:///c:\\data\\sqlite\\db\\master_db.db'
 
 
 class Config(object):
     """Configuration constants"""
+    APIKEY = '484cb8d70ed62517ecfec5b4666fb83c8e62944a4b460222d72becd39d6e4412'
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
     DELTA = '15m'
-    OUTSIDER = '3h'
     HOUR = '1h'
+    OUTSIDER = '3h'
     DATABASE_URI = master
     # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or MySqlDB
     SQLALCHEMY_TRACK_MODIFICATIONS = False

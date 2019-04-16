@@ -1,6 +1,6 @@
 from datetime import datetime
 import logging
-import pytz
+# import pytz
 
 # third party imports
 import pandas as pd
@@ -61,22 +61,25 @@ class Bitfinex(CryptoAPI):
                     df = pd.DataFrame(data, columns=['MTS', 'Open', 'Close', 'High', 'Low', 'Volume'])
                     df['MTS'] = pd.to_datetime(df['MTS'], unit='ms')
                     df.set_index('MTS', drop=True, inplace=True)
+                    self.updateDB(df, table, conn)
                 except Error_429 as err:
-                    log.info(f'Bitfinex {key} 429 error {err.args}')
+                    log.info(f'Bitfinex {key} 429 error {err}')
                 except Exception as err:
-                    log.error(f'BitfinexAPI {key} {err.args}')
-                self.updateDB(df, table, conn)
+                    log.error(f'BitfinexAPI {key} {err.__class__.__name__}')
         resp.close_session()
 
 
 class Compare(CryptoAPI):
     """ CryptoCompare API """
 
+    APIkey = '484cb8d70ed62517ecfec5b4666fb83c8e62944a4b460222d72becd39d6e4412'
     endpoint_minute = 'https://min-api.cryptocompare.com/data/histominute?'
     endpoint_hour = 'https://min-api.cryptocompare.com/data/histohour?'
     maxLimit = 2000
 
     def __init__(self, delta, interval):
+        self.maxLimit = int(self.maxLimit / int(delta[:-1]))
+        self.endpoint = self.endpoint_minute if delta[-1] == 'm' else self.endpoint_hour
         super().__init__(delta, self.maxLimit, interval)
         self.DB_Tables = CryptoCompare_Tables[delta]
 
@@ -85,11 +88,11 @@ class Compare(CryptoAPI):
         for key, table in self.DB_Tables.items():
             limit = self._numRecords(key, table, session)
             if limit > 0:
-                endpoint = self.endpoint_minute if self.delta == '15m' else self.endpoint_hour
                 try:
                     sym = key.upper()
                     data = resp.api_response(
-                        endpoint + f"fsym={sym}&tsym=USD&limit={limit}&aggregate={self.delta[:-1]}&e=CCCAGG")
+                        self.endpoint + f"fsym={sym}&tsym=USD&limit={limit}&aggregate={self.delta[:-1]} \
+                                          &e=CCCAGG&api_key={self.APIkey}")
                     if data['Type'] >= 100:
                         DF = pd.DataFrame(data['Data'][1:])
                         DF['MTS'] = pd.to_datetime(DF['time'], unit='s')
@@ -99,12 +102,12 @@ class Compare(CryptoAPI):
                         DF.rename(columns={'close': 'Close', 'open': 'Open', 'low': 'Low', 'high': 'High'},
                                   inplace=True)
                         DF = DF[['Open', 'Close', 'High', 'Low', 'Volume']]
+                        self.updateDB(DF, table, conn)
                     else:
                         if data['Type'] == 99:
                             log.info(f"CompareChunk {sym} {data['Message']}")
                 except Exception as err:
-                    log.error(f'CompareAPI - {key} {err.args}')
-                self.updateDB(DF, table, conn)
+                    log.error(f'CompareAPI - {key} {err.args}', exec_info=True)
         resp.close_session()
 
 
@@ -132,9 +135,9 @@ class Binance(CryptoAPI):
                     df['MTS'] = pd.to_datetime(df['MTS'], unit='ms')
                     df.set_index('MTS', drop=True, inplace=True)
                     df = df[['Open', 'Close', 'High', 'Low', 'Volume']]
+                    self.updateDB(df, table, conn)
                 except Error_429 as err:
-                    log.info(f'Bitfinex {key} 429 error {err.args}')
+                    log.info(f'Binance {key} 429 error {err.args}')
                 except Exception as err:
-                    log.error(f'BitfinexAPI {key} {err.args}')
-                self.updateDB(df, table, conn)
+                    log.error(f'BinanceAPI {key} {err.args}')
         resp.close_session()

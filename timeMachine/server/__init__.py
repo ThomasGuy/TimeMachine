@@ -1,11 +1,11 @@
 import logging
-from logging.handlers import SMTPHandler, RotatingFileHandler
+from logging.handlers import SMTPHandler
 
 # third party imports
 from flask import Flask
 from flask_sqlalchemy_session import flask_scoped_session
 from flask_login import LoginManager
-from flask_mail import Mail
+# from flask_mail import Mail
 
 # package imports
 from timeMachine.config import Config
@@ -23,7 +23,7 @@ def create_app(config_class=Config):
     app.config.from_object(Config)
 
     from timeMachine import session_factory
-    flask_scoped_session(session_factory, app)
+    db_session = flask_scoped_session(session_factory, app)
 
     login_manager.init_app(app)
     # mail.init_mail(app)
@@ -41,6 +41,10 @@ def create_app(config_class=Config):
     @login_manager.user_loader
     def load_user(id):
         return cs.query(User).get(int(id))
+
+    @app.teardown_request
+    def shutdown_session(exception=None):
+        db_session.remove()
 
     if not app.debug:
         if app.config['MAIL_SERVER']:
@@ -62,4 +66,4 @@ def create_app(config_class=Config):
     return app
 
 
-from timeMachine.database import models
+# from timeMachine.database import models

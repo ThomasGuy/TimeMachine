@@ -1,8 +1,9 @@
 # Third party imports
-from sqlalchemy import Table, Column, DateTime, Float, String, Integer, ForeignKey
-# from sqlalchemy.orm import relationship, backref
+from sqlalchemy import Column, DateTime, Float, String, Integer, ForeignKey
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
-from flask_sqlalchemy_session import current_session as cs
+# from flask_sqlalchemy_session import current_session as cs
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -13,10 +14,12 @@ class User(UserMixin, Base):
     __tablename__ = 'users'
 
     id = Column(Integer(), primary_key=True)
-    username = Column(String(64), index=True, unique=True)
-    email = Column(String(120), index=True, unique=True)
+    username = Column(String(64), index=True, unique=True, nullable=False)
+    email = Column(String(120), index=True, unique=True, nullable=False)
     password_hash = Column(String(128))
-    # profile = relationship('Profile', backref='author', lazy='dynamic')
+
+    # 1 to 1 relationship with Portfolio
+    portfolio = relationship("Portfolio", cascade="all, delete, delete-orphan", uselist=False, back_populates="user")
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -28,17 +31,74 @@ class User(UserMixin, Base):
         return check_password_hash(self.password_hash, password)
 
 
-class Profile(Base):
-    __tablename__ = 'profiles'
+class Portfolio(Base):
+    __tablename__ = 'portfolios'
 
-    profile_id = Column(Integer, primary_key=True)
-    body = Column(String(255))
-    user_id = Column(Integer(), ForeignKey('users.id'))
+    id = Column(Integer, primary_key=True)
+    sma = Column(Integer, nullable=False)
+    bma = Column(Integer, nullable=False)
+    lma = Column(Integer, nullable=False)
+    freq = Column(String(3), nullable=False)
 
-    # user = relationship("User", backref=backref('profiles', order_by=profile_id))
+    # 1 to 1 relationship with User
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    user = relationship("User", back_populates="portfolio")
+    # 1 to many relationship with bank
+    bank = relationship("Bank", cascade="all, delete, delete-orphan")
+
+    def __init__(self, sma=20, bma=55, lma=140, freq='6h'):
+        self.sma = sma
+        self.bma = bma
+        self.lma = lma
+        self.freq = freq
 
     def __repr__(self):
-        return '<Profile {}>'.format(self.body)
+        return "<Portfolio (sma={}, bma={}, lma={}, freq={})>".format(self.sma, self.bma, self.lma, self.freq)
+
+    @hybrid_property
+    def my_portfolio(self):
+        return [(row.coin_id, row.amount) for row in self.bank]
+
+    @hybrid_property
+    def my_coins(self):
+        return {row.coin_id for row in self.bank}
+
+    @hybrid_method
+    def i_have(self, altcoin):
+        for row in self.bank:
+            if row.coin_id == altcoin:
+                return True
+        return False
+
+    @hybrid_method
+    def amount(self, altcoin):
+        for row in self.bank:
+            if row.coin_id == altcoin:
+                return row.amount
+
+
+class Bank(Base):
+    __tablename__ = 'banks'
+
+    amount = Column(Float, nullable=False)
+    # 1 to many from Portfolio
+    portfolio_id = Column(Integer, ForeignKey('portfolios.id'), primary_key=True)
+    # many to 1 to Coins
+    coin_id = Column(String(6), ForeignKey('coins.coin'), primary_key=True)
+    # relationship with Coin
+    altcoin = relationship("Coin", cascade="all, delete")
+
+    def __repr__(self):
+        return "<Bank (amount={}, Coin={})>".format(self.amount, self.coin_id)
+
+
+class Coin(Base):
+    __tablename__ = 'coins'
+
+    coin = Column(String(6), primary_key=True)
+    name = Column(String(40), nullable=False, unique=True)
+    rank = Column(Integer)
+    market_cap = Column(Float)
 
 
 class MyMixin(object):
@@ -60,191 +120,191 @@ class MyMixin(object):
 
     def __repr__(self):
         return f"{self.__tablename__} <MTS={self.MTS}, Open={self.Open}, Close={self.Close}, High={self.High}, \
-Low={self.Low}, Volume={self.Volume}>"
-
-
-class Avt(MyMixin, Base):
-    pass
-
-
-class Bab(MyMixin, Base):
-    pass
-
-
-class Bch(MyMixin, Base):
-    pass
-
-
-class Btc(MyMixin, Base):
-    pass
-
-
-class Btg(MyMixin, Base):
-    pass
-
-
-class Dsh(MyMixin, Base):
-    pass
-
-
-class Eos(MyMixin, Base):
-    pass
-
-
-class Etc(MyMixin, Base):
-    pass
-
-
-class Eth(MyMixin, Base):
-    pass
-
-
-class Fun(MyMixin, Base):
-    pass
-
-
-class Gnt(MyMixin, Base):
-    pass
-
-
-class Iot(MyMixin, Base):
-    pass
-
-
-class Ltc(MyMixin, Base):
-    pass
-
-
-class Neo(MyMixin, Base):
-    pass
-
-
-class Qsh(MyMixin, Base):
-    pass
-
-
-class Qtm(MyMixin, Base):
-    pass
-
-
-class Omg(MyMixin, Base):
-    pass
-
-
-class Rcn(MyMixin, Base):
-    pass
-
-
-class Rlc(MyMixin, Base):
-    pass
-
-
-class San(MyMixin, Base):
-    pass
-
-
-class Spk(MyMixin, Base):
-    pass
-
-
-class Trx(MyMixin, Base):
-    pass
-
-
-class Xlm(MyMixin, Base):
-    pass
-
-
-class Xmr(MyMixin, Base):
-    pass
+                 Low={self.Low}, Volume={self.Volume}>"
 
 
 class Ada(MyMixin, Base):
-    pass
-
-
-class Xvg(MyMixin, Base):
-    pass
-
-
-class Xem(MyMixin, Base):
-    pass
-
-
-class Ven(MyMixin, Base):
-    pass
-
-
-class Bnb(MyMixin, Base):
-    pass
-
-
-class Bcn(MyMixin, Base):
-    pass
-
-
-class Icx(MyMixin, Base):
-    pass
-
-
-class Lsk(MyMixin, Base):
-    pass
-
-
-class Zil(MyMixin, Base):
-    pass
-
-
-class Ont(MyMixin, Base):
-    pass
+    name = 'Cardano (ADA)'
 
 
 class Ae(MyMixin, Base):
-    pass
+    name = 'Aeternity (AE)'
 
 
-class Zrx(MyMixin, Base):
-    pass
+class Avt(MyMixin, Base):
+    name = 'Aventus (AVT)'
 
 
-class Dcr(MyMixin, Base):
-    pass
+class Bab(MyMixin, Base):
+    name = 'Bitcoin Cash ABC (BAB)'
 
 
-class Nano(MyMixin, Base):
-    pass
-
-
-class Waves(MyMixin, Base):
-    pass
-
-
-class Xrp(MyMixin, Base):
-    pass
-
-
-class Zec(MyMixin, Base):
-    pass
-
-
-class Elf(MyMixin, Base):
-    pass
-
-
-class Steem(MyMixin, Base):
-    pass
-
-
-class Mana(MyMixin, Base):
-    pass
-
-
-class Edo(MyMixin, Base):
-    pass
+class Bch(MyMixin, Base):
+    name = 'Bitcoin Cash (BCH)'
 
 
 class Bchsv(MyMixin, Base):
-    pass
+    name = 'Bitcoin Cash SV (BCHSV)'
+
+
+class Bcn(MyMixin, Base):
+    name = 'Bytecoin (BCN)'
+
+
+class Bnb(MyMixin, Base):
+    name = 'Binance Coin (BNB)'
+
+
+class Btc(MyMixin, Base):
+    name = 'Bitcoin (BTC)'
+
+
+class Btg(MyMixin, Base):
+    name = 'Bitcoin Gold (BTG)'
+
+
+class Dcr(MyMixin, Base):
+    name = 'Decred (DCR)'
+
+
+class Dsh(MyMixin, Base):
+    name = 'Dash (DSH)'
+
+
+class Edo(MyMixin, Base):
+    name = 'Eidoo (EDO)'
+
+
+class Elf(MyMixin, Base):
+    name = 'aelf (ELF)'
+
+
+class Eos(MyMixin, Base):
+    name = 'Eosio (EOS)'
+
+
+class Etc(MyMixin, Base):
+    name = 'Ethereum Classic (ETC)'
+
+
+class Eth(MyMixin, Base):
+    name = 'Ethereum (ETH)'
+
+
+class Fun(MyMixin, Base):
+    name = 'FunFair (FUN)'
+
+
+class Gnt(MyMixin, Base):
+    name = 'Golem (GNT)'
+
+
+class Icx(MyMixin, Base):
+    name = 'ICON (ICX)'
+
+
+class Iot(MyMixin, Base):
+    name = 'Iota (IOT)'
+
+
+class Lsk(MyMixin, Base):
+    name = 'Lisk (LSK)'
+
+
+class Ltc(MyMixin, Base):
+    name = 'Litecoin (LTC)'
+
+
+class Mana(MyMixin, Base):
+    name = 'Decentraland (MANA)'
+
+
+class Nano(MyMixin, Base):
+    name = 'Nano (NANO)'
+
+
+class Neo(MyMixin, Base):
+    name = 'Neon (NEO)'
+
+
+class Omg(MyMixin, Base):
+    name = 'Omisego (OMG)'
+
+
+class Ont(MyMixin, Base):
+    name = 'Ontology (ONT)'
+
+
+class Qsh(MyMixin, Base):
+    name = 'QASH (QSH)'
+
+
+class Qtm(MyMixin, Base):
+    name = 'Qtum (QTM)'
+
+
+class Rcn(MyMixin, Base):
+    name = 'Ripio Credit Network (RCN)'
+
+
+class Rlc(MyMixin, Base):
+    name = 'iExec (RLC)'
+
+
+class San(MyMixin, Base):
+    name = 'Santiment (SAN)'
+
+
+class Spk(MyMixin, Base):
+    name = 'SpankChain (SPK)'
+
+
+class Steem(MyMixin, Base):
+    name = 'Steem (STEEM)'
+
+
+class Trx(MyMixin, Base):
+    name = 'Tron (TRX)'
+
+
+class Ven(MyMixin, Base):
+    name = 'VeChain (VEN)'
+
+
+class Waves(MyMixin, Base):
+    name = 'Waves (WAVES)'
+
+
+class Xem(MyMixin, Base):
+    name = 'Xem (XEM)'
+
+
+class Xlm(MyMixin, Base):
+    name = 'Stella Lumen (XLM)'
+
+
+class Xmr(MyMixin, Base):
+    name = 'Monero (XMR)'
+
+
+class Xrp(MyMixin, Base):
+    name = 'Ripple (XRP)'
+
+
+class Xvg(MyMixin, Base):
+    name = 'Verge (XVG)'
+
+
+class Zec(MyMixin, Base):
+    name = 'Zcash (ZEC)'
+
+
+class Zil(MyMixin, Base):
+    name = 'Zilliqa (ZIL)'
+
+
+class Zrx(MyMixin, Base):
+    name = 'Ox (ZRX)'
 
 
 Binance_Tables = {
@@ -260,24 +320,24 @@ Binance_Tables = {
 CryptoCompare_Tables = {
     '15m': {
         'ada': Ada,
-        'xem': Xem,
-        'ven': Ven,
+        'bch': Bch,
+        'ae': Ae,
         'bnb': Bnb,
         'bcn': Bcn,
         'icx': Icx,
         'ont': Ont,
         'omg': Omg,
         'trx': Trx,
+        'xem': Xem,
         'zil': Zil,
-        'ae': Ae,
         'zrx': Zrx
     },
     '1h': {
-        'bch': Bch,
         'dcr': Dcr,
         'lsk': Lsk,
         'nano': Nano,
         'steem': Steem,
+        'ven': Ven,
         'waves': Waves,
         'xvg': Xvg
     },
@@ -304,6 +364,7 @@ Bitfinex_Tables = {
         'zec': Zec
     },
     '1h': {
+
         'edo': Edo,
         'elf': Elf,
         'gnt': Gnt,
@@ -312,11 +373,11 @@ Bitfinex_Tables = {
         'san': San
     },
     '3h': {
-        'avt': Avt,
-        'fun': Fun,
-        'rcn': Rcn,
-        'rlc': Rlc,
-        'spk': Spk
+        # 'avt': Avt,
+        # 'fun': Fun,
+        # 'rcn': Rcn,
+        'rlc': Rlc
+        # 'spk': Spk
     }
 }
 
