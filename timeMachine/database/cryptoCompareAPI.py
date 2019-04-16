@@ -1,6 +1,6 @@
 from datetime import datetime
 import logging
-import pytz
+# import pytz
 
 # third party imports
 import pandas as pd
@@ -9,6 +9,7 @@ from sqlalchemy import func
 # package imports
 from timeMachine.crypto.utils import Return_API_response
 from timeMachine.database.models import CryptoCompare_Tables
+from timeMachine.config import Config
 
 log = logging.getLogger(__name__)
 
@@ -18,8 +19,6 @@ class DataError(Exception):
 
 
 class CompareAPI:
-
-    APIkey = '484cb8d70ed62517ecfec5b4666fb83c8e62944a4b460222d72becd39d6e4412'
     period = {
         'm': 'histominute',
         'h': 'histohour',
@@ -44,14 +43,18 @@ class CompareAPI:
             sym = key.upper()
             holder = []
             date = to_date
-            if self.delta[-1] == 'm' and (to_date - from_date > (7 * 24 * 3600 - 3600)):
-                endpoint = 'https://min-api.cryptocompare.com/data/histohour?'
 
             try:
                 while date > from_date:
-                    ipdata = resp.api_response(
-                        endpoint + f"fsym={sym}&tsym=USD&limit=2000&toTs={date} \
-                                     &aggregate={self.delta[:-1]}&e=CCCAGG&api_key={self.APIkey}")
+                    if self.delta[-1] == 'm' and (to_date - from_date > (7 * 24 * 3600 - 3600)):
+                        endpoint = 'https://min-api.cryptocompare.com/data/histohour?'
+                        ipdata = resp.api_response(
+                            endpoint + f"fsym={sym}&tsym=USD&limit=2000&toTs={date} \
+                                        &aggregate=1&e=CCCAGG&api_key={Config.APIKEY}")
+                    else:
+                        ipdata = resp.api_response(
+                            endpoint + f"fsym={sym}&tsym=USD&limit=2000&toTs={date} \
+                                        &aggregate={self.delta[:-1]}&e=CCCAGG&api_key={Config.APIKEY}")
                     if ipdata['Type'] == 100:
                         # raise DataError(f"CompareChunk {sym} {ipdata['Type']} {ipdata['Message']}")
                         holder.append(pd.DataFrame(ipdata['Data']))
@@ -61,7 +64,7 @@ class CompareAPI:
             except DataError as e:
                 log.info(e)
             except Exception as e:
-                log.error(f'CompareAPI - {key} {e}', exec_info=True)
+                log.error(f'CompareAPI - {key} {e}', exc_info=True)
             else:
                 DF = pd.concat(holder, axis=0)
                 DF = DF[DF['time'] > from_date]

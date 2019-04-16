@@ -1,9 +1,9 @@
 # Third party imports
-from sqlalchemy import Table, Column, DateTime, Float, String, Integer, ForeignKey
+from sqlalchemy import Column, DateTime, Float, String, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
-from flask_sqlalchemy_session import current_session as cs
+# from flask_sqlalchemy_session import current_session as cs
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -364,6 +364,7 @@ Bitfinex_Tables = {
         'zec': Zec
     },
     '1h': {
+
         'edo': Edo,
         'elf': Elf,
         'gnt': Gnt,
@@ -372,11 +373,11 @@ Bitfinex_Tables = {
         'san': San
     },
     '3h': {
-        'avt': Avt,
-        'fun': Fun,
-        'rcn': Rcn,
-        'rlc': Rlc,
-        'spk': Spk
+        # 'avt': Avt,
+        # 'fun': Fun,
+        # 'rcn': Rcn,
+        'rlc': Rlc
+        # 'spk': Spk
     }
 }
 

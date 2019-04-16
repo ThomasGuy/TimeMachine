@@ -10,7 +10,7 @@ import logging
 
 
 # from Time Machine
-from .utils import Email, DF_Tables
+from .utils import DF_Tables
 from ..database.models import delta_tables
 from .coin import Coin
 
@@ -37,7 +37,7 @@ class Monitor():
         self.db_tables = delta_tables(delta)
         session = Session()
         for key, dataf in DF_Tables.get_DFTables(session, self.db_tables).items():
-            cross = DF_Tables.crossover(dataf[55:])
+            cross = DF_Tables.crossover(dataf)  # need to allow for the 'bma' difference '''dataf[bma:]'''
             self.altcoin[key] = Coin(self.db_tables[key].name, dataf, cross)
             log.info(f'Initialize: {self.altcoin[key]}')
         session.close()

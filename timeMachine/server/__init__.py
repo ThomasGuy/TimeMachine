@@ -1,11 +1,11 @@
 import logging
-from logging.handlers import SMTPHandler, RotatingFileHandler
+from logging.handlers import SMTPHandler
 
 # third party imports
 from flask import Flask
 from flask_sqlalchemy_session import flask_scoped_session
 from flask_login import LoginManager
-from flask_mail import Mail
+# from flask_mail import Mail
 
 # package imports
 from timeMachine.config import Config
@@ -66,4 +66,4 @@ def create_app(config_class=Config):
     return app
 
 
-from timeMachine.database import models
+# from timeMachine.database import models

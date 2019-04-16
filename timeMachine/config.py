@@ -8,10 +8,11 @@ master = 'sqlite:///c:\\data\\sqlite\\db\\master_db.db'
 
 class Config(object):
     """Configuration constants"""
+    APIKEY = '484cb8d70ed62517ecfec5b4666fb83c8e62944a4b460222d72becd39d6e4412'
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
     DELTA = '15m'
-    OUTSIDER = '3h'
     HOUR = '1h'
+    OUTSIDER = '3h'
     DATABASE_URI = master
     # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or MySqlDB
     SQLALCHEMY_TRACK_MODIFICATIONS = False

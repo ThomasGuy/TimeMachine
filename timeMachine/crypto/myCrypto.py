@@ -7,7 +7,7 @@ from sqlalchemy.orm import scoped_session
 # package imports
 from .monitor import Monitor
 from timeMachine.database.cryptoCompareAPI import CompareAPI
-from ..database.cryptoAPIs import Bitfinex, Compare, Binance
+from ..database.cryptoAPIs import Bitfinex, Binance
 from timeMachine import engine, session_factory
 
 

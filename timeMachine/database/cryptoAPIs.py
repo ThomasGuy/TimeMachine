@@ -1,6 +1,6 @@
 from datetime import datetime
 import logging
-import pytz
+# import pytz
 
 # third party imports
 import pandas as pd
@@ -61,11 +61,11 @@ class Bitfinex(CryptoAPI):
                     df = pd.DataFrame(data, columns=['MTS', 'Open', 'Close', 'High', 'Low', 'Volume'])
                     df['MTS'] = pd.to_datetime(df['MTS'], unit='ms')
                     df.set_index('MTS', drop=True, inplace=True)
+                    self.updateDB(df, table, conn)
                 except Error_429 as err:
-                    log.info(f'Bitfinex {key} 429 error {err.args}')
+                    log.info(f'Bitfinex {key} 429 error {err}')
                 except Exception as err:
-                    log.error(f'BitfinexAPI {key} {err.args}')
-                self.updateDB(df, table, conn)
+                    log.error(f'BitfinexAPI {key} {err.__class__.__name__}')
         resp.close_session()
 
 
@@ -102,12 +102,12 @@ class Compare(CryptoAPI):
                         DF.rename(columns={'close': 'Close', 'open': 'Open', 'low': 'Low', 'high': 'High'},
                                   inplace=True)
                         DF = DF[['Open', 'Close', 'High', 'Low', 'Volume']]
+                        self.updateDB(DF, table, conn)
                     else:
                         if data['Type'] == 99:
                             log.info(f"CompareChunk {sym} {data['Message']}")
                 except Exception as err:
                     log.error(f'CompareAPI - {key} {err.args}', exec_info=True)
-                self.updateDB(DF, table, conn)
         resp.close_session()
 
 
@@ -135,9 +135,9 @@ class Binance(CryptoAPI):
                     df['MTS'] = pd.to_datetime(df['MTS'], unit='ms')
                     df.set_index('MTS', drop=True, inplace=True)
                     df = df[['Open', 'Close', 'High', 'Low', 'Volume']]
+                    self.updateDB(df, table, conn)
                 except Error_429 as err:
                     log.info(f'Binance {key} 429 error {err.args}')
                 except Exception as err:
                     log.error(f'BinanceAPI {key} {err.args}')
-                self.updateDB(df, table, conn)
         resp.close_session()
